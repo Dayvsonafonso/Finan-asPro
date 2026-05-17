@@ -1,5 +1,5 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
-import { TrendingUp, TrendingDown, Wallet, Plus, Minus } from 'lucide-react';
+import { TrendingUp, TrendingDown, Wallet, Plus, Minus, History } from 'lucide-react';
 import { formatCurrency } from '../lib/utils';
 import { Transaction, Category } from '../types';
 import { Card } from './ui/Card';
@@ -82,16 +82,21 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
   return (
     <div className="space-y-6 lg:space-y-8">
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-        <Card className="bg-indigo-600 text-white border-none">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <Card className="border-l-4 border-l-indigo-500 dark:bg-gray-900">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-white/20 rounded-lg">
-              <Wallet className="w-6 h-6" />
+            <div className="p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg text-indigo-600 dark:text-indigo-400">
+              <History className="w-6 h-6" />
             </div>
-            <span className="text-xs font-medium bg-white/20 px-2 py-1 rounded-full">Saldo Total</span>
+            <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 px-2 py-1 rounded-full">Saldo Anterior</span>
           </div>
-          <h2 className="text-2xl lg:text-3xl font-bold">{formatCurrency(totals.balance)}</h2>
-          <p className="text-indigo-100 text-sm mt-2">Disponível para uso</p>
+          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
+            {formatCurrency(totals.balance - (currentMonthTotals.income - currentMonthTotals.expense))}
+          </h2>
+          <div className="flex items-center text-indigo-600 dark:text-indigo-400 text-sm mt-2">
+            <History className="w-4 h-4 mr-1" />
+            <span>Acumulado de meses passados</span>
+          </div>
         </Card>
 
         <Card className="border-l-4 border-l-emerald-500 dark:bg-gray-900">
@@ -120,6 +125,17 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             <Minus className="w-4 h-4 mr-1" />
             <span>Saídas do mês</span>
           </div>
+        </Card>
+
+        <Card className="bg-indigo-600 text-white border-none">
+          <div className="flex items-center justify-between mb-4">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <Wallet className="w-6 h-6" />
+            </div>
+            <span className="text-xs font-medium bg-white/20 px-2 py-1 rounded-full">Saldo Total</span>
+          </div>
+          <h2 className="text-2xl lg:text-3xl font-bold">{formatCurrency(totals.balance)}</h2>
+          <p className="text-indigo-100 text-sm mt-2">Disponível para uso</p>
         </Card>
       </div>
 
