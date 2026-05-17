@@ -61,7 +61,7 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
       return a.name.localeCompare(b.name);
     });
 
-    if (categoryOrder.length === 0) return smartSorted;
+    if (!Array.isArray(categoryOrder) || categoryOrder.length === 0) return smartSorted;
 
     return [...filtered].sort((a, b) => {
       const indexA = categoryOrder.indexOf(a.id);
