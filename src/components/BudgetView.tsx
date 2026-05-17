@@ -52,15 +52,17 @@ function BudgetItem({
       value={cat}
       dragListener={false}
       dragControls={dragControls}
+      whileDrag={{ scale: 1.02, boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}
       className="p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 transition-colors relative group"
     >
       <div
         onPointerDown={(e) => dragControls.start(e)}
-        className="absolute left-1 top-0 bottom-0 w-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing text-gray-400"
+        style={{ touchAction: 'none' }}
+        className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center opacity-40 hover:opacity-100 active:opacity-100 transition-opacity cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 z-10 select-none"
       >
-        <GripVertical className="w-5 h-5" />
+        <GripVertical className="w-5 h-5 pointer-events-none" />
       </div>
-      <div className="pl-6">
+      <div className="pl-8">
         <div
           className="flex items-center justify-between mb-4 cursor-pointer hover:opacity-80 transition-opacity"
           onClick={() => toggleExpand(cat.id)}
