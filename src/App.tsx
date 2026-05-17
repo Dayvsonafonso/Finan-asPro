@@ -281,7 +281,9 @@ export default function App() {
               />
             </div>
             <div className="overflow-hidden">
-              <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{user?.email}</p>
+              <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
+                {user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email}
+              </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">Plano Gratuito</p>
             </div>
           </div>
@@ -375,7 +377,9 @@ export default function App() {
                     />
                   </div>
                   <div className="overflow-hidden">
-                    <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{user?.email}</p>
+                    <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
+                      {user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email}
+                    </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">Plano Gratuito</p>
                   </div>
                 </div>
