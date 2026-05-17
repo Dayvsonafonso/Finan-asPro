@@ -10,12 +10,12 @@ import {
   LogOut,
   User as UserIcon,
   ChevronRight,
-  Database,
   FileText,
   Sun,
   Moon,
   Target,
-  Smartphone
+  Smartphone,
+  ShieldCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Toaster, toast } from 'sonner';
@@ -26,6 +26,7 @@ import { FaturasView } from './components/FaturasView';
 import { TransactionForm } from './components/TransactionForm';
 import { BudgetView } from './components/BudgetView';
 import { InstallView } from './components/InstallView';
+import { AdminPanel } from './components/AdminPanel';
 import { Auth } from './components/Auth';
 import { Modal } from './components/ui/Modal';
 import { Button } from './components/ui/Button';
@@ -35,7 +36,7 @@ import { useAuth } from './contexts/AuthContext';
 import { useTheme } from './contexts/ThemeContext';
 import { supabase } from './lib/supabase';
 
-type View = 'dashboard' | 'transactions' | 'faturas' | 'categories' | 'budget' | 'install';
+type View = 'dashboard' | 'transactions' | 'faturas' | 'admin' | 'budget' | 'install';
 
 export default function App() {
   const { user, signOut, loading: authLoading } = useAuth();
@@ -137,85 +138,10 @@ export default function App() {
     }
   };
 
-  const setupDatabase = async () => {
-    const promise = async () => {
-      const sql = `
-        -- 1. Criar tabelas se não existirem
-        create table if not exists categories (
-          id uuid default gen_random_uuid() primary key,
-          name text not null,
-          icon text not null,
-          color text not null,
-          user_id uuid references auth.users(id) on delete cascade not null,
-          created_at timestamp with time zone default timezone('utc'::text, now()) not null
-        );
-
-        create table if not exists transactions (
-          id uuid default gen_random_uuid() primary key,
-          description text not null,
-          amount numeric not null,
-          type text check (type in ('income', 'expense')) not null,
-          category text not null,
-          date date not null,
-          is_fixed boolean default false,
-          total_installments integer,
-          current_installment integer,
-          is_paid boolean default false,
-          user_id uuid references auth.users(id) on delete cascade not null,
-          created_at timestamp with time zone default timezone('utc'::text, now()) not null
-        );
-
-        -- 2. Garantir que as colunas existem (caso a tabela já existisse antes)
-        do $$ 
-        begin 
-            if not exists (select 1 from information_schema.columns where table_name='transactions' and column_name='is_fixed') then
-                alter table transactions add column is_fixed boolean default false;
-            end if;
-            if not exists (select 1 from information_schema.columns where table_name='transactions' and column_name='total_installments') then
-                alter table transactions add column total_installments integer;
-            end if;
-            if not exists (select 1 from information_schema.columns where table_name='transactions' and column_name='current_installment') then
-                alter table transactions add column current_installment integer;
-            end if;
-            if not exists (select 1 from information_schema.columns where table_name='transactions' and column_name='is_paid') then
-                alter table transactions add column is_paid boolean default false;
-            end if;
-            if not exists (select 1 from information_schema.columns where table_name='categories' and column_name='budget') then
-                alter table categories add column budget numeric default 0;
-            end if;
-        end $$;
-
-        -- 3. Habilitar RLS (Row Level Security)
-        alter table categories enable row level security;
-        alter table transactions enable row level security;
-
-        -- 4. Criar políticas (se não existirem)
-        do $$ 
-        begin 
-            if not exists (select 1 from pg_policies where policyname = 'Users can manage their own categories') then
-                create policy "Users can manage their own categories" on categories for all using (auth.uid() = user_id);
-            end if;
-            if not exists (select 1 from pg_policies where policyname = 'Users can manage their own transactions') then
-                create policy "Users can manage their own transactions" on transactions for all using (auth.uid() = user_id);
-            end if;
-        end $$;
-      `;
-      
-      await navigator.clipboard.writeText(sql);
-      return "SQL de Reparo copiado! Cole no SQL Editor do Supabase.";
-    };
-
-    toast.promise(promise(), {
-      loading: 'Preparando SQL...',
-      success: (data) => data,
-      error: 'Erro ao copiar SQL',
-    });
-  };
-
   const isAdmin = user?.email === 'dayvsonafonsoo@gmail.com' || user?.email === 'dayvsonafonsodd@gmail.com';
 
-  // Redirect if not admin and trying to access categories
-  if (currentView === 'categories' && !isAdmin) {
+  // Redirect if not admin and trying to access admin panel
+  if (currentView === 'admin' && !isAdmin) {
     setCurrentView('dashboard');
   }
 
@@ -225,7 +151,7 @@ export default function App() {
     { id: 'faturas', label: 'Faturas', icon: FileText },
     { id: 'budget', label: 'Orçamentos', icon: Target },
     { id: 'install', label: 'Como Instalar', icon: Smartphone },
-    ...(isAdmin ? [{ id: 'categories', label: 'Categorias', icon: Settings }] : []),
+    ...(isAdmin ? [{ id: 'admin', label: 'ADM', icon: ShieldCheck }] : []),
   ];
 
   return (
@@ -421,23 +347,17 @@ export default function App() {
               {currentView === 'transactions' && 'Meus Lançamentos'}
               {currentView === 'faturas' && 'Minhas Faturas'}
               {currentView === 'budget' && 'Orçamentos Mensais'}
-              {currentView === 'categories' && 'Configurações'}
+              {currentView === 'admin' && 'Painel ADM'}
             </h2>
             <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm lg:text-base">
               {currentView === 'dashboard' && 'Acompanhe seu desempenho financeiro hoje.'}
               {currentView === 'transactions' && 'Gerencie suas entradas e saídas detalhadamente.'}
               {currentView === 'faturas' && 'Acompanhe suas parcelas e pagamentos pendentes.'}
               {currentView === 'budget' && 'Distribua sua renda e defina limites de gastos por categoria.'}
-              {currentView === 'categories' && 'Personalize suas categorias de gastos.'}
+              {currentView === 'admin' && 'Gerencie e monitore os usuários da plataforma.'}
             </p>
           </div>
           <div className="flex items-center space-x-3">
-            {currentView === 'categories' && (
-              <Button variant="outline" onClick={setupDatabase} className="h-10 lg:h-12 px-4 lg:px-6 rounded-2xl dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
-                <Database className="w-5 h-5 mr-2" />
-                Configurar Banco
-              </Button>
-            )}
             <Button onClick={() => handleOpenModal()} className="h-10 lg:h-12 px-4 lg:px-6 rounded-2xl shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20">
               <PlusCircle className="w-5 h-5 mr-2" />
               Novo Lançamento
@@ -482,22 +402,8 @@ export default function App() {
           {currentView === 'install' && (
             <InstallView />
           )}
-          {currentView === 'categories' && (
-            <div className="flex flex-col items-center justify-center h-[400px] text-center space-y-6">
-              <div className="p-6 bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm max-w-md transition-colors duration-300">
-                <Database className="w-12 h-12 text-indigo-600 dark:text-indigo-400 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Configuração do Banco de Dados</h3>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">
-                  Se você está usando um novo projeto Supabase, você precisa criar as tabelas necessárias.
-                </p>
-                <Button onClick={setupDatabase} className="mt-6 w-full">
-                  Copiar SQL de Inicialização
-                </Button>
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-4 italic">
-                  Após copiar, cole no SQL Editor do seu painel Supabase e execute.
-                </p>
-              </div>
-            </div>
+          {currentView === 'admin' && (
+            <AdminPanel />
           )}
         </div>
       </main>
