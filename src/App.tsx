@@ -14,7 +14,8 @@ import {
   FileText,
   Sun,
   Moon,
-  Target
+  Target,
+  Smartphone
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Toaster, toast } from 'sonner';
@@ -24,6 +25,7 @@ import { TransactionList } from './components/TransactionList';
 import { FaturasView } from './components/FaturasView';
 import { TransactionForm } from './components/TransactionForm';
 import { BudgetView } from './components/BudgetView';
+import { InstallView } from './components/InstallView';
 import { Auth } from './components/Auth';
 import { Modal } from './components/ui/Modal';
 import { Button } from './components/ui/Button';
@@ -33,7 +35,7 @@ import { useAuth } from './contexts/AuthContext';
 import { useTheme } from './contexts/ThemeContext';
 import { supabase } from './lib/supabase';
 
-type View = 'dashboard' | 'transactions' | 'faturas' | 'categories' | 'budget';
+type View = 'dashboard' | 'transactions' | 'faturas' | 'categories' | 'budget' | 'install';
 
 export default function App() {
   const { user, signOut, loading: authLoading } = useAuth();
@@ -222,6 +224,7 @@ export default function App() {
     { id: 'transactions', label: 'Lançamentos', icon: ArrowUpCircle },
     { id: 'faturas', label: 'Faturas', icon: FileText },
     { id: 'budget', label: 'Orçamentos', icon: Target },
+    { id: 'install', label: 'Como Instalar', icon: Smartphone },
     ...(isAdmin ? [{ id: 'categories', label: 'Categorias', icon: Settings }] : []),
   ];
 
@@ -463,6 +466,9 @@ export default function App() {
               transactions={transactions}
               onUpdateCategory={updateCategory}
             />
+          )}
+          {currentView === 'install' && (
+            <InstallView />
           )}
           {currentView === 'categories' && (
             <div className="flex flex-col items-center justify-center h-[400px] text-center space-y-6">
