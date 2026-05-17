@@ -235,12 +235,15 @@ export default function App() {
       {/* Sidebar Desktop */}
       <aside className="hidden lg:flex flex-col w-72 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 p-6 sticky top-0 h-screen transition-colors duration-300">
         <div className="flex items-center justify-between mb-6 lg:mb-10 px-2">
-          <div className="flex items-center space-x-3">
+          <button 
+            onClick={() => setCurrentView('dashboard')}
+            className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity active:scale-[0.98] text-left border-none bg-transparent p-0 outline-none"
+          >
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/20">
               <PlusCircle className="w-6 h-6" />
             </div>
             <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Meu<span className="text-indigo-600">Bolso</span></h1>
-          </div>
+          </button>
           <Button 
             variant="ghost" 
             size="icon" 
@@ -303,10 +306,13 @@ export default function App() {
 
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between px-6 z-40 transition-colors duration-300">
-        <div className="flex items-center space-x-2">
+        <button
+          onClick={() => setCurrentView('dashboard')}
+          className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity active:scale-[0.98] border-none bg-transparent p-0 outline-none"
+        >
           <PlusCircle className="w-6 h-6 text-indigo-600" />
           <span className="font-bold text-lg dark:text-white">MeuBolso</span>
-        </div>
+        </button>
         <div className="flex items-center space-x-2">
           <Button 
             variant="ghost" 
@@ -340,10 +346,16 @@ export default function App() {
               className="fixed inset-y-0 left-0 w-72 bg-white dark:bg-gray-900 z-50 p-6 flex flex-col lg:hidden shadow-2xl transition-colors duration-300"
             >
               <div className="flex items-center justify-between mb-6 lg:mb-10">
-                <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => {
+                    setCurrentView('dashboard');
+                    setIsSidebarOpen(false);
+                  }}
+                  className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity active:scale-[0.98] border-none bg-transparent p-0 outline-none"
+                >
                   <PlusCircle className="w-6 h-6 text-indigo-600" />
                   <span className="font-bold text-lg dark:text-white">MeuBolso</span>
-                </div>
+                </button>
                 <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)}>
                   <X className="w-6 h-6 dark:text-gray-300" />
                 </Button>
