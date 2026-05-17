@@ -34,6 +34,7 @@ import { Transaction } from './types';
 import { cn } from './lib/utils';
 import { useAuth } from './contexts/AuthContext';
 import { useTheme } from './contexts/ThemeContext';
+import { useActivityTracker } from './hooks/useActivityTracker';
 import { supabase } from './lib/supabase';
 
 type View = 'dashboard' | 'transactions' | 'faturas' | 'admin' | 'budget' | 'install';
@@ -41,6 +42,7 @@ type View = 'dashboard' | 'transactions' | 'faturas' | 'admin' | 'budget' | 'ins
 export default function App() {
   const { user, signOut, loading: authLoading } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  useActivityTracker();
   const { 
     transactions, 
     categories, 

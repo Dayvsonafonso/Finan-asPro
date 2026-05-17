@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
-import { Input } from './ui/Input';
 import { supabase } from '../lib/supabase';
 import {
   Users,
@@ -13,8 +12,7 @@ import {
   RefreshCw,
   Calendar,
   Clock,
-  Mail,
-  User as UserIcon,
+  Zap,
   Shield,
 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -26,30 +24,41 @@ interface AuthUser {
   avatar_url: string;
   created_at: string;
   last_sign_in_at: string | null;
+  last_active_at: string | null;
   provider: string;
 }
 
-type SortField = 'full_name' | 'email' | 'created_at' | 'last_sign_in_at';
+type SortField = 'full_name' | 'email' | 'created_at' | 'last_active_at';
 type SortDirection = 'asc' | 'desc';
 
 export function AdminPanel() {
   const [users, setUsers] = useState<AuthUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortField, setSortField] = useState<SortField>('created_at');
+  const [sortField, setSortField] = useState<SortField>('last_active_at');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      // Using the admin API to list users (requires service_role key)
+      // 1. Fetch all auth users
       const { data, error } = await supabase.auth.admin.listUsers({
         page: 1,
         perPage: 1000,
       });
-
       if (error) throw error;
 
+      // 2. Fetch activity data
+      const { data: activityData } = await supabase
+        .from('user_activity')
+        .select('user_id, last_active_at');
+
+      const activityMap = new Map<string, string>();
+      (activityData || []).forEach((a: any) => {
+        activityMap.set(a.user_id, a.last_active_at);
+      });
+
+      // 3. Merge
       const mapped: AuthUser[] = (data?.users || []).map((u: any) => ({
         id: u.id,
         email: u.email || 'Sem email',
@@ -63,6 +72,7 @@ export function AdminPanel() {
           `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(u.email || 'default')}`,
         created_at: u.created_at,
         last_sign_in_at: u.last_sign_in_at,
+        last_active_at: activityMap.get(u.id) || null,
         provider: u.app_metadata?.provider || 'email',
       }));
 
@@ -79,7 +89,7 @@ export function AdminPanel() {
   }, []);
 
   const filteredUsers = useMemo(() => {
-    let result = users;
+    let result = [...users];
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -91,10 +101,19 @@ export function AdminPanel() {
     }
 
     result.sort((a, b) => {
-      let valA = a[sortField] || '';
-      let valB = b[sortField] || '';
+      let valA: string = '';
+      let valB: string = '';
 
-      if (sortField === 'created_at' || sortField === 'last_sign_in_at') {
+      if (sortField === 'last_active_at') {
+        // For last_active_at, fallback to last_sign_in_at if no activity tracked
+        valA = a.last_active_at || a.last_sign_in_at || '';
+        valB = b.last_active_at || b.last_sign_in_at || '';
+      } else {
+        valA = a[sortField] || '';
+        valB = b[sortField] || '';
+      }
+
+      if (sortField === 'created_at' || sortField === 'last_active_at') {
         const dateA = valA ? new Date(valA).getTime() : 0;
         const dateB = valB ? new Date(valB).getTime() : 0;
         return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
@@ -119,9 +138,10 @@ export function AdminPanel() {
       (u) => new Date(u.created_at) >= startOfMonth
     ).length;
 
-    const activeRecently = users.filter(
-      (u) => u.last_sign_in_at && new Date(u.last_sign_in_at) >= sevenDaysAgo
-    ).length;
+    const activeRecently = users.filter((u) => {
+      const lastUse = u.last_active_at || u.last_sign_in_at;
+      return lastUse && new Date(lastUse) >= sevenDaysAgo;
+    }).length;
 
     return {
       total: users.length,
@@ -150,7 +170,7 @@ export function AdminPanel() {
   };
 
   const formatDateTime = (dateStr: string | null) => {
-    if (!dateStr) return 'Nunca acessou';
+    if (!dateStr) return null;
     return new Date(dateStr).toLocaleString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
@@ -168,11 +188,28 @@ export function AdminPanel() {
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
 
-    if (minutes < 1) return 'Agora mesmo';
+    if (minutes < 1) return 'Online agora';
     if (minutes < 60) return `${minutes}min atrás`;
     if (hours < 24) return `${hours}h atrás`;
     if (days < 30) return `${days}d atrás`;
     return `${Math.floor(days / 30)}m atrás`;
+  };
+
+  const getActivityStatus = (user: AuthUser) => {
+    const lastUse = user.last_active_at || user.last_sign_in_at;
+    if (!lastUse) return { label: 'Nunca usou', color: 'text-gray-400', dot: 'bg-gray-300 dark:bg-gray-600' };
+
+    const diff = Date.now() - new Date(lastUse).getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 10) return { label: 'Online agora', color: 'text-green-500', dot: 'bg-green-500 animate-pulse' };
+    if (hours < 1) return { label: `${minutes}min atrás`, color: 'text-green-500', dot: 'bg-green-500' };
+    if (hours < 24) return { label: `${hours}h atrás`, color: 'text-amber-500', dot: 'bg-amber-500' };
+    if (days < 7) return { label: `${days}d atrás`, color: 'text-orange-500', dot: 'bg-orange-500' };
+    if (days < 30) return { label: `${days}d atrás`, color: 'text-gray-500', dot: 'bg-gray-400' };
+    return { label: `${Math.floor(days / 30)}m atrás`, color: 'text-gray-400', dot: 'bg-gray-300 dark:bg-gray-600' };
   };
 
   const SortIcon = ({ field }: { field: SortField }) => {
@@ -332,11 +369,11 @@ export function AdminPanel() {
                       </th>
                       <th className="text-left px-6 py-3.5">
                         <button
-                          onClick={() => handleSort('last_sign_in_at')}
+                          onClick={() => handleSort('last_active_at')}
                           className="flex items-center space-x-1.5 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
                         >
-                          <span>Último Login</span>
-                          <SortIcon field="last_sign_in_at" />
+                          <span>Último Uso</span>
+                          <SortIcon field="last_active_at" />
                         </button>
                       </th>
                       <th className="text-left px-6 py-3.5">
@@ -347,129 +384,140 @@ export function AdminPanel() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                    {filteredUsers.map((user, index) => (
-                      <motion.tr
-                        key={user.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: index * 0.02 }}
-                        className="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
-                      >
-                        <td className="px-6 py-4">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm flex-shrink-0">
-                              <img
-                                src={user.avatar_url}
-                                alt={user.full_name}
-                                className="w-full h-full object-cover"
-                                referrerPolicy="no-referrer"
-                              />
+                    {filteredUsers.map((user, index) => {
+                      const activity = getActivityStatus(user);
+                      const lastUse = user.last_active_at || user.last_sign_in_at;
+                      return (
+                        <motion.tr
+                          key={user.id}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: index * 0.02 }}
+                          className="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
+                        >
+                          <td className="px-6 py-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="relative flex-shrink-0">
+                                <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm">
+                                  <img
+                                    src={user.avatar_url}
+                                    alt={user.full_name}
+                                    className="w-full h-full object-cover"
+                                    referrerPolicy="no-referrer"
+                                  />
+                                </div>
+                                <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-gray-900 ${activity.dot}`} />
+                              </div>
+                              <span className="font-semibold text-sm text-gray-900 dark:text-white truncate max-w-[180px]">
+                                {user.full_name}
+                              </span>
                             </div>
-                            <span className="font-semibold text-sm text-gray-900 dark:text-white truncate max-w-[180px]">
-                              {user.full_name}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="text-sm text-gray-600 dark:text-gray-300">{user.email}</span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center space-x-2">
-                            <Calendar className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                            <span className="text-sm text-gray-600 dark:text-gray-300">
-                              {formatDate(user.created_at)}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex flex-col">
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="text-sm text-gray-600 dark:text-gray-300">{user.email}</span>
+                          </td>
+                          <td className="px-6 py-4">
                             <div className="flex items-center space-x-2">
-                              <Clock className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                              <Calendar className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
                               <span className="text-sm text-gray-600 dark:text-gray-300">
-                                {formatDateTime(user.last_sign_in_at)}
+                                {formatDate(user.created_at)}
                               </span>
                             </div>
-                            {user.last_sign_in_at && (
-                              <span className="text-[11px] text-indigo-500 dark:text-indigo-400 font-medium ml-5.5 mt-0.5">
-                                {getTimeSince(user.last_sign_in_at)}
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span
-                            className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider ${
-                              user.provider === 'google'
-                                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                                : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
-                            }`}
-                          >
-                            {user.provider}
-                          </span>
-                        </td>
-                      </motion.tr>
-                    ))}
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex flex-col">
+                              <div className="flex items-center space-x-2">
+                                <Zap className={`w-3.5 h-3.5 flex-shrink-0 ${activity.color}`} />
+                                <span className={`text-sm font-medium ${activity.color}`}>
+                                  {activity.label}
+                                </span>
+                              </div>
+                              {lastUse && (
+                                <span className="text-[11px] text-gray-400 dark:text-gray-500 ml-[22px] mt-0.5">
+                                  {formatDateTime(lastUse)}
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span
+                              className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider ${
+                                user.provider === 'google'
+                                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                              }`}
+                            >
+                              {user.provider}
+                            </span>
+                          </td>
+                        </motion.tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
 
               {/* Mobile Cards */}
               <div className="lg:hidden divide-y divide-gray-100 dark:divide-gray-800">
-                {filteredUsers.map((user, index) => (
-                  <motion.div
-                    key={user.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.03 }}
-                    className="p-4 hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
-                  >
-                    <div className="flex items-start space-x-3">
-                      <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm flex-shrink-0 mt-0.5">
-                        <img
-                          src={user.avatar_url}
-                          alt={user.full_name}
-                          className="w-full h-full object-cover"
-                          referrerPolicy="no-referrer"
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-semibold text-sm text-gray-900 dark:text-white truncate">
-                            {user.full_name}
-                          </h4>
-                          <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider flex-shrink-0 ml-2 ${
-                              user.provider === 'google'
-                                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                                : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
-                            }`}
-                          >
-                            {user.provider}
-                          </span>
+                {filteredUsers.map((user, index) => {
+                  const activity = getActivityStatus(user);
+                  return (
+                    <motion.div
+                      key={user.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.03 }}
+                      className="p-4 hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div className="relative flex-shrink-0 mt-0.5">
+                          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm">
+                            <img
+                              src={user.avatar_url}
+                              alt={user.full_name}
+                              className="w-full h-full object-cover"
+                              referrerPolicy="no-referrer"
+                            />
+                          </div>
+                          <div className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-gray-900 ${activity.dot}`} />
                         </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
-                          {user.email}
-                        </p>
-                        <div className="flex items-center justify-between mt-2">
-                          <div className="flex items-center space-x-1.5">
-                            <Calendar className="w-3 h-3 text-gray-400" />
-                            <span className="text-[11px] text-gray-500 dark:text-gray-400">
-                              {formatDate(user.created_at)}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <h4 className="font-semibold text-sm text-gray-900 dark:text-white truncate">
+                              {user.full_name}
+                            </h4>
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider flex-shrink-0 ml-2 ${
+                                user.provider === 'google'
+                                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                              }`}
+                            >
+                              {user.provider}
                             </span>
                           </div>
-                          <div className="flex items-center space-x-1.5">
-                            <Clock className="w-3 h-3 text-gray-400" />
-                            <span className="text-[11px] text-gray-500 dark:text-gray-400">
-                              {user.last_sign_in_at
-                                ? getTimeSince(user.last_sign_in_at)
-                                : 'Nunca acessou'}
-                            </span>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                            {user.email}
+                          </p>
+                          <div className="flex items-center justify-between mt-2">
+                            <div className="flex items-center space-x-1.5">
+                              <Calendar className="w-3 h-3 text-gray-400" />
+                              <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                                {formatDate(user.created_at)}
+                              </span>
+                            </div>
+                            <div className="flex items-center space-x-1.5">
+                              <Zap className={`w-3 h-3 ${activity.color}`} />
+                              <span className={`text-[11px] font-medium ${activity.color}`}>
+                                {activity.label}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  );
+                })}
               </div>
 
               {filteredUsers.length === 0 && (
