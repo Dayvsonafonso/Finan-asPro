@@ -48,11 +48,8 @@ export function AdminPanel() {
   const fetchUsers = async (silent = false) => {
     if (!silent) setLoading(true);
     try {
-      // 1. Fetch all auth users
-      const { data, error } = await supabase.auth.admin.listUsers({
-        page: 1,
-        perPage: 1000,
-      });
+      // 1. Fetch all auth users via secure RPC (SECURITY DEFINER function)
+      const { data: rpcUsers, error } = await supabase.rpc('get_all_users');
       if (error) throw error;
 
       // 2. Fetch activity data
@@ -66,21 +63,21 @@ export function AdminPanel() {
       });
 
       // 3. Merge
-      const mapped: AuthUser[] = (data?.users || []).map((u: any) => ({
+      const mapped: AuthUser[] = (rpcUsers || []).map((u: any) => ({
         id: u.id,
         email: u.email || 'Sem email',
         full_name:
-          u.user_metadata?.full_name ||
-          u.user_metadata?.name ||
+          u.raw_user_meta_data?.full_name ||
+          u.raw_user_meta_data?.name ||
           u.email?.split('@')[0] ||
           'Sem nome',
         avatar_url:
-          u.user_metadata?.avatar_url ||
+          u.raw_user_meta_data?.avatar_url ||
           `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(u.email || 'default')}`,
         created_at: u.created_at,
         last_sign_in_at: u.last_sign_in_at,
         last_active_at: activityMap.get(u.id) || null,
-        provider: u.app_metadata?.provider || 'email',
+        provider: u.raw_user_meta_data?.iss?.includes('google') ? 'google' : 'email',
       }));
 
       setUsers(mapped);
