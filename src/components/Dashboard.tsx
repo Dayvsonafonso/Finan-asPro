@@ -122,9 +122,9 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        <Card className="dark:bg-gray-900 flex flex-col justify-between">
+        <Card className="bg-emerald-50/30 dark:bg-emerald-950/20 border-emerald-100/50 dark:border-emerald-900/20 flex flex-col justify-between">
           <div className="mb-3 lg:mb-4">
-            <div className="inline-flex p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-emerald-600 dark:text-emerald-400">
+            <div className="inline-flex p-2 bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-500/20 dark:shadow-emerald-950/40">
               <TrendingUp className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
           </div>
@@ -132,15 +132,15 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
               {formatCurrency(currentMonthTotals.income)}
             </h2>
-            <div className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm truncate">
+            <div className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm font-semibold truncate">
               + Entradas do Mês
             </div>
           </div>
         </Card>
 
-        <Card className="dark:bg-gray-900 flex flex-col justify-between">
+        <Card className="bg-red-50/30 dark:bg-red-950/20 border-red-100/50 dark:border-red-900/20 flex flex-col justify-between">
           <div className="mb-3 lg:mb-4">
-            <div className="inline-flex p-2 bg-red-50 dark:bg-red-900/20 rounded-lg text-red-600 dark:text-red-400">
+            <div className="inline-flex p-2 bg-red-500 text-white rounded-xl shadow-lg shadow-red-500/20 dark:shadow-red-950/40">
               <TrendingDown className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
           </div>
@@ -148,15 +148,15 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
               {formatCurrency(currentMonthTotals.expense)}
             </h2>
-            <div className="text-red-600 dark:text-red-400 text-xs sm:text-sm truncate">
+            <div className="text-red-600 dark:text-red-400 text-xs sm:text-sm font-semibold truncate">
               - Saídas do Mês
             </div>
           </div>
         </Card>
 
-        <Card className="dark:bg-gray-900 flex flex-col justify-between">
+        <Card className="bg-indigo-50/30 dark:bg-indigo-950/20 border-indigo-100/50 dark:border-indigo-900/20 flex flex-col justify-between">
           <div className="mb-3 lg:mb-4">
-            <div className="inline-flex p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg text-indigo-600 dark:text-indigo-400">
+            <div className="inline-flex p-2 bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/20 dark:shadow-indigo-950/40">
               <History className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
           </div>
@@ -164,15 +164,15 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
               {formatCurrency(totals.balance - (currentMonthTotals.income - currentMonthTotals.expense))}
             </h2>
-            <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm truncate">
+            <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm font-semibold truncate">
               Saldo Acumulado
             </div>
           </div>
         </Card>
 
-        <Card className="dark:bg-gray-900 flex flex-col justify-between">
+        <Card className="bg-orange-50/30 dark:bg-orange-950/20 border-orange-100/50 dark:border-orange-900/20 flex flex-col justify-between">
           <div className="mb-3 lg:mb-4">
-            <div className="inline-flex p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-orange-600 dark:text-orange-400">
+            <div className="inline-flex p-2 bg-orange-500 text-white rounded-xl shadow-lg shadow-orange-500/20 dark:shadow-orange-950/40">
               <Target className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
           </div>
@@ -180,7 +180,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
               {formatCurrency(totalBudget)}
             </h2>
-            <div className="text-orange-600 dark:text-orange-400 text-xs sm:text-sm truncate">
+            <div className="text-orange-600 dark:text-orange-400 text-xs sm:text-sm font-semibold truncate">
               A Pagar
             </div>
           </div>
