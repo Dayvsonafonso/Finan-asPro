@@ -44,7 +44,7 @@ export function InstallView() {
             <Download className="w-6 h-6 animate-bounce" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Instalar o Meu Bolso</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Instalar o Carteira Fácil</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400">Tenha acesso rápido e em tela cheia direto do celular</p>
           </div>
         </div>
@@ -98,7 +98,7 @@ export function InstallView() {
               <div className="flex-1">
                 <h4 className="font-bold text-gray-800 dark:text-gray-200">Confirmar</h4>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
-                  Toque em <strong>"Instalar"</strong> na janela que aparecer. O app do <strong>Meu Bolso</strong> será adicionado à sua tela inicial de aplicativos instantaneamente!
+                  Toque em <strong>"Instalar"</strong> na janela que aparecer. O app <strong>Carteira Fácil</strong> será adicionado à sua tela inicial de aplicativos instantaneamente!
                 </p>
               </div>
             </div>

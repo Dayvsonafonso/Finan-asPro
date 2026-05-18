@@ -1,6 +1,6 @@
 {
-  "name": "Meu Bolso",
-  "short_name": "Meu Bolso",
+  "name": "Carteira Fácil",
+  "short_name": "Carteira Fácil",
   "description": "Seu controle financeiro pessoal e inteligente",
   "start_url": "/",
   "display": "standalone",

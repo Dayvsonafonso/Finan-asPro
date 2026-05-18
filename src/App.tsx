@@ -191,7 +191,7 @@ export default function App() {
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/20">
               <PlusCircle className="w-6 h-6" />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Meu<span className="text-indigo-600">Bolso</span></h1>
+            <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Carteira<span className="text-indigo-600">Fácil</span></h1>
           </button>
           <Button 
             variant="ghost" 
@@ -263,7 +263,7 @@ export default function App() {
           className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity active:scale-[0.98] border-none bg-transparent p-0 outline-none"
         >
           <PlusCircle className="w-6 h-6 text-indigo-600" />
-          <span className="font-bold text-lg dark:text-white">MeuBolso</span>
+          <span className="font-bold text-lg dark:text-white">CarteiraFácil</span>
         </button>
         <div className="flex items-center space-x-2">
           <Button 
@@ -306,7 +306,7 @@ export default function App() {
                   className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity active:scale-[0.98] border-none bg-transparent p-0 outline-none"
                 >
                   <PlusCircle className="w-6 h-6 text-indigo-600" />
-                  <span className="font-bold text-lg dark:text-white">MeuBolso</span>
+                  <span className="font-bold text-lg dark:text-white">CarteiraFácil</span>
                 </button>
                 <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)}>
                   <X className="w-6 h-6 dark:text-gray-300" />
