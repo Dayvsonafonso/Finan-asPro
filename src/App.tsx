@@ -399,6 +399,14 @@ export default function App() {
                 <PlusCircle className="w-7 h-7" />
               </Button>
             )}
+            {currentView === 'goals' && (
+              <Button 
+                onClick={() => window.dispatchEvent(new CustomEvent('open-new-goal-modal'))} 
+                className="w-14 h-14 rounded-full p-0 flex items-center justify-center shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20 flex-shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white border-none"
+              >
+                <PlusCircle className="w-7 h-7" />
+              </Button>
+            )}
           </div>
         </header>
 

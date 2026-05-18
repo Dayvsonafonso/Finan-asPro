@@ -89,6 +89,12 @@ export function GoalsView() {
     setIsOpenForm(true);
   };
 
+  React.useEffect(() => {
+    const handleOpen = () => handleOpenNew();
+    window.addEventListener('open-new-goal-modal', handleOpen);
+    return () => window.removeEventListener('open-new-goal-modal', handleOpen);
+  }, []);
+
   const handleOpenEdit = (goal: Goal) => {
     setEditingGoal(goal);
     setName(goal.name);
@@ -154,18 +160,6 @@ export function GoalsView() {
 
   return (
     <div className="space-y-6">
-      {/* Top Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white">Gerenciamento de Metas</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Guarde dinheiro de forma focada para realizar seus objetivos.</p>
-        </div>
-        <Button onClick={handleOpenNew} className="flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-2 px-4 shadow-lg shadow-indigo-500/10">
-          <Plus className="w-5 h-5" />
-          <span>Nova Meta</span>
-        </Button>
-      </div>
-
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
         <Card className="bg-emerald-50/30 dark:bg-emerald-950/20 border-emerald-100/50 dark:border-emerald-900/20 flex flex-col justify-between py-4">
