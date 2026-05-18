@@ -133,7 +133,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
               {formatCurrency(currentMonthTotals.income)}
             </h2>
             <div className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm truncate">
-              + Entradas do mês
+              + Entradas do Mês
             </div>
           </div>
         </Card>
@@ -149,7 +149,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
               {formatCurrency(currentMonthTotals.expense)}
             </h2>
             <div className="text-red-600 dark:text-red-400 text-xs sm:text-sm truncate">
-              - Saídas do mês
+              - Saídas do Mês
             </div>
           </div>
         </Card>
