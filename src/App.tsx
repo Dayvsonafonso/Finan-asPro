@@ -15,7 +15,8 @@ import {
   Moon,
   Target,
   Smartphone,
-  ShieldCheck
+  ShieldCheck,
+  Trophy
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Toaster, toast } from 'sonner';
@@ -26,6 +27,7 @@ import { FaturasView } from './components/FaturasView';
 import { TransactionForm } from './components/TransactionForm';
 import { BudgetView } from './components/BudgetView';
 import { InstallView } from './components/InstallView';
+import { GoalsView } from './components/GoalsView';
 import { AdminPanel } from './components/AdminPanel';
 import { Auth } from './components/Auth';
 import { Modal } from './components/ui/Modal';
@@ -37,7 +39,7 @@ import { useTheme } from './contexts/ThemeContext';
 import { useActivityTracker } from './hooks/useActivityTracker';
 import { supabase } from './lib/supabase';
 
-type View = 'dashboard' | 'transactions' | 'faturas' | 'admin' | 'budget' | 'install';
+type View = 'dashboard' | 'transactions' | 'faturas' | 'admin' | 'budget' | 'goals' | 'install';
 
 export default function App() {
   const { user, signOut, loading: authLoading } = useAuth();
@@ -161,6 +163,7 @@ export default function App() {
     { id: 'transactions', label: 'Lançamentos', icon: ArrowUpCircle },
     { id: 'faturas', label: 'Faturas', icon: FileText },
     { id: 'budget', label: 'Orçamentos', icon: Target },
+    { id: 'goals', label: 'Minhas Metas', icon: Trophy },
     { id: 'install', label: 'Como Instalar', icon: Smartphone },
     ...(isAdmin ? [{ id: 'admin', label: 'ADM', icon: ShieldCheck }] : []),
   ];
@@ -377,6 +380,7 @@ export default function App() {
                 {currentView === 'transactions' && 'Meus Lançamentos'}
                 {currentView === 'faturas' && 'Minhas Faturas'}
                 {currentView === 'budget' && 'Orçamento Mensal'}
+                {currentView === 'goals' && 'Minhas Metas'}
                 {currentView === 'admin' && 'Painel ADM'}
                 {currentView === 'install' && 'Instalar Aplicativo'}
               </h2>
@@ -384,6 +388,7 @@ export default function App() {
                 {currentView === 'transactions' && 'Gerencie suas entradas e saídas detalhadamente.'}
                 {currentView === 'faturas' && 'Acompanhe suas parcelas e pagamentos pendentes.'}
                 {currentView === 'budget' && 'Distribua sua renda e defina limites de gastos por categoria.'}
+                {currentView === 'goals' && 'Guarde dinheiro de forma focada para realizar seus sonhos.'}
                 {currentView === 'admin' && 'Gerencie e monitore os usuários da plataforma.'}
               </p>
             </div>
@@ -430,6 +435,9 @@ export default function App() {
               transactions={transactions}
               onUpdateCategory={updateCategory}
             />
+          )}
+          {currentView === 'goals' && (
+            <GoalsView />
           )}
           {currentView === 'install' && (
             <InstallView />
