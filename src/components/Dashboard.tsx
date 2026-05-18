@@ -144,14 +144,14 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             <div className="p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg text-indigo-600 dark:text-indigo-400">
               <History className="w-6 h-6" />
             </div>
-            <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 px-2 py-1 rounded-full">Saldo Anterior</span>
+            <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 px-2 py-1 rounded-full">Patrimônio Líquido</span>
           </div>
           <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
             {formatCurrency(totals.balance - (currentMonthTotals.income - currentMonthTotals.expense))}
           </h2>
           <div className="flex items-center text-indigo-600 dark:text-indigo-400 text-sm mt-2">
             <History className="w-4 h-4 mr-1" />
-            <span>Acumulado de meses passados</span>
+            <span>Saldo de meses anteriores</span>
           </div>
         </Card>
       </div>
