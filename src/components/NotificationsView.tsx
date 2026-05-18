@@ -34,7 +34,38 @@ export function NotificationsView() {
     if (saved) {
       setDismissedIds(JSON.parse(saved));
     }
+    
     fetchNotifications();
+
+    // Inscreve no canal de alterações em tempo real do Supabase
+    const channel = supabase
+      .channel('notifications_realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'notifications' },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            const newNotif = payload.new as Notification;
+            setRawNotifications(prev => {
+              if (prev.some(n => n.id === newNotif.id)) return prev;
+              return [newNotif, ...prev];
+            });
+          } else if (payload.eventType === 'DELETE') {
+            const deletedId = payload.old.id;
+            setRawNotifications(prev => prev.filter(n => n.id !== deletedId));
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedNotif = payload.new as Notification;
+            setRawNotifications(prev => prev.map(n => n.id === updatedNotif.id ? updatedNotif : n));
+          }
+          // Avisa outros componentes (ex: App.tsx) para recalcular contagens
+          window.dispatchEvent(new Event('notifications-updated'));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchNotifications = async () => {

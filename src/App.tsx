@@ -101,7 +101,7 @@ export default function App() {
     }
   }, [user]);
 
-  // Efeito para monitorar novas notificações periódica e por eventos
+  // Efeito para monitorar novas notificações periódica e por eventos em tempo real
   React.useEffect(() => {
     if (!user) return;
     fetchUnreadCount();
@@ -109,14 +109,42 @@ export default function App() {
     // Atualiza o contador caso o usuário exclua ou chegue algo novo
     window.addEventListener('notifications-updated', fetchUnreadCount);
     
-    // Polling opcional a cada 30 segundos
+    // Inscreve no canal de alterações em tempo real do Supabase
+    const channel = supabase
+      .channel('app_notifications_realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'notifications' },
+        (payload) => {
+          fetchUnreadCount();
+          
+          if (payload.eventType === 'INSERT') {
+            const newNotif = payload.new;
+            // Se o usuário NÃO estiver visualizando a aba de notificações, exibe o pop-up (toast) em tempo real
+            if (currentView !== 'notifications') {
+              toast.info('Novo comunicado do administrador!', {
+                description: newNotif.title,
+                action: {
+                  label: 'Visualizar',
+                  onClick: () => setCurrentView('notifications')
+                },
+                duration: 8000
+              });
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    // Polling opcional a cada 30 segundos como fallback
     const interval = setInterval(fetchUnreadCount, 30000);
 
     return () => {
       window.removeEventListener('notifications-updated', fetchUnreadCount);
+      supabase.removeChannel(channel);
       clearInterval(interval);
     };
-  }, [user, fetchUnreadCount]);
+  }, [user, fetchUnreadCount, currentView]);
 
   // Zera o contador quando entra na aba de notificações
   React.useEffect(() => {
