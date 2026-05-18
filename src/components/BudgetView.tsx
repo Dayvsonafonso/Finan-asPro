@@ -86,9 +86,10 @@ function BudgetItem({
 
           <div className="flex items-center space-x-4" onClick={(e) => e.stopPropagation()}>
             {editingId === cat.id ? (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1 sm:space-x-2">
                 <Input
                   type="text"
+                  inputMode="numeric"
                   value={editValue}
                   onChange={(e) => {
                     let val = e.target.value.replace(/\D/g, '');
@@ -100,24 +101,33 @@ function BudgetItem({
                     }
                     setEditValue(val);
                   }}
-                  className="w-28 h-9"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleSave(cat.id);
+                    } else if (e.key === 'Escape') {
+                      e.preventDefault();
+                      setEditingId(null);
+                    }
+                  }}
+                  className="w-24 sm:w-28 h-9 text-sm"
                   autoFocus
                 />
                 <Button
                   size="icon"
                   variant="ghost"
                   onClick={() => handleSave(cat.id)}
-                  className="text-green-500 h-9 w-9"
+                  className="text-green-500 h-9 w-9 p-0 flex-shrink-0"
                 >
-                  <Check className="w-4 h-4" />
+                  <Check className="w-5 h-5" />
                 </Button>
                 <Button
                   size="icon"
                   variant="ghost"
                   onClick={() => setEditingId(null)}
-                  className="text-red-500 h-9 w-9"
+                  className="text-red-500 h-9 w-9 p-0 flex-shrink-0"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </Button>
               </div>
             ) : (
