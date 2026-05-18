@@ -148,7 +148,7 @@ function BudgetItem({
                   <Button size="icon" variant="ghost" onClick={() => handleEdit(cat)} className="h-8 w-8">
                     <Edit2 className="w-4 h-4 text-gray-500" />
                   </Button>
-                  <div className="pl-1 sm:pl-2 border-l border-gray-200 dark:border-gray-700 pointer-events-none">
+                  <div className="hidden sm:block pl-1 sm:pl-2 border-l border-gray-200 dark:border-gray-700 pointer-events-none">
                     {expandedId === cat.id ? (
                       <ChevronUp className="w-5 h-5 text-gray-400" />
                     ) : (
