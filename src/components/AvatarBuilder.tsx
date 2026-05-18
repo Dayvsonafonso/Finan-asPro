@@ -134,10 +134,12 @@ export function AvatarBuilder({ onSave, onCancel, isSaving }: AvatarBuilderProps
     }
     url += `&eyes=${eyes}`;
     url += `&mouth=${mouth}`;
-    url += `&clothes=${clothes}`;
-    if (accessories) url += `&accessories=${accessories}`;
+    url += `&clothing=${clothes}`;
+    if (accessories) {
+      url += `&accessories=${accessories}&accessoriesProbability=100`;
+    }
     if (facialHair) {
-      url += `&facialHair=${facialHair}&facialHairColor=${hairColor}`;
+      url += `&facialHair=${facialHair}&facialHairColor=${hairColor}&facialHairProbability=100`;
     }
     return url;
   };
