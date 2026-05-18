@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { User, Lock, Mail, Camera, Eye, EyeOff, Check, AlertCircle } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { User, Lock, Mail, Camera, Eye, EyeOff, Check, AlertCircle, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
 import { Button } from './ui/Button';
@@ -9,10 +9,12 @@ import { useAuth } from '../contexts/AuthContext';
 
 export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { user } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [displayName, setDisplayName] = useState(
     user?.user_metadata?.full_name || user?.user_metadata?.name || ''
   );
   const [isSavingName, setIsSavingName] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   // Password change
   const [showPasswordSection, setShowPasswordSection] = useState(false);
@@ -25,6 +27,58 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   const isGoogleUser = user?.app_metadata?.provider === 'google';
   const avatarUrl = user?.user_metadata?.avatar_url || 
     `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user?.email || 'default')}`;
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validate file
+    if (!file.type.startsWith('image/')) {
+      toast.error('Por favor, selecione uma imagem.');
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('A imagem deve ter no máximo 2MB.');
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user.id}/avatar.${fileExt}`;
+
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      // Add cache buster to force refresh
+      const urlWithCacheBuster = `${publicUrl}?t=${Date.now()}`;
+
+      // Update user metadata
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: { avatar_url: urlWithCacheBuster }
+      });
+
+      if (updateError) throw updateError;
+
+      toast.success('Foto de perfil atualizada!');
+    } catch (err: any) {
+      console.error('Avatar upload error:', err);
+      toast.error('Erro ao atualizar foto: ' + (err?.message || 'Erro desconhecido'));
+    } finally {
+      setIsUploadingAvatar(false);
+      // Reset file input
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const handleSaveName = async () => {
     if (!displayName.trim()) {
@@ -77,15 +131,38 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
         {/* Avatar & Info Header */}
         <div className="flex flex-col items-center text-center pb-6 border-b border-gray-100 dark:border-gray-800">
           <div className="relative mb-4">
-            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-indigo-100 dark:border-indigo-900/50 shadow-xl shadow-indigo-500/10">
-              <img
-                src={avatarUrl}
-                alt="Avatar"
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center border-3 border-white dark:border-gray-900 shadow-lg">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarUpload}
+              className="hidden"
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploadingAvatar}
+              className="relative group cursor-pointer"
+            >
+              <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-indigo-100 dark:border-indigo-900/50 shadow-xl shadow-indigo-500/10 transition-all group-hover:border-indigo-300 dark:group-hover:border-indigo-600">
+                <img
+                  src={avatarUrl}
+                  alt="Avatar"
+                  className="w-full h-full object-cover transition-all group-hover:scale-110 group-hover:brightness-75"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              {/* Overlay on hover */}
+              <div className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+                <Camera className="w-6 h-6 text-white" />
+              </div>
+              {/* Upload spinner */}
+              {isUploadingAvatar && (
+                <div className="absolute inset-0 rounded-full flex items-center justify-center bg-black/50">
+                  <Loader2 className="w-7 h-7 text-white animate-spin" />
+                </div>
+              )}
+            </button>
+            <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-lg pointer-events-none">
               <Camera className="w-4 h-4 text-white" />
             </div>
           </div>
