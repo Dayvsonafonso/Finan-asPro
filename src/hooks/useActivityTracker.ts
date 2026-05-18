@@ -32,7 +32,7 @@ export function useActivityTracker() {
         );
 
       if (error) {
-        console.error('Activity tracker upsert error:', error);
+        console.error('Activity tracker upsert error (possível erro de RLS/Permissão no Supabase):', error.message, error.details);
       }
     } catch (err) {
       console.warn('Activity tracker exception:', err);
