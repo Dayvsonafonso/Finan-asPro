@@ -66,7 +66,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
     const d = new Date();
     d.setDate(1); // Set to 1st of the month to avoid rollover bugs (e.g., Feb 29th)
     d.setMonth(d.getMonth() - i);
-    const label = d.toLocaleString('pt-BR', { month: 'long' });
+    const label = d.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
     return {
       month: d.getMonth(),
       year: d.getFullYear(),
