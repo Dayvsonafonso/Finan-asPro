@@ -29,6 +29,7 @@ import { BudgetView } from './components/BudgetView';
 import { InstallView } from './components/InstallView';
 import { GoalsView } from './components/GoalsView';
 import { AdminPanel } from './components/AdminPanel';
+import { ProfileModal } from './components/ProfileModal';
 import { Auth } from './components/Auth';
 import { Modal } from './components/ui/Modal';
 import { Button } from './components/ui/Button';
@@ -60,6 +61,7 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   if (authLoading) {
     return (
@@ -217,8 +219,11 @@ export default function App() {
         </nav>
 
         <div className="mt-auto pt-6 border-t border-gray-100 dark:border-gray-800">
-          <div className="flex items-center space-x-3 px-2 mb-6">
-            <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-600 dark:text-indigo-400 overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm">
+          <button
+            onClick={() => setIsProfileOpen(true)}
+            className="flex items-center space-x-3 px-2 mb-6 w-full rounded-xl py-2 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all cursor-pointer group"
+          >
+            <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-600 dark:text-indigo-400 overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm group-hover:border-indigo-300 dark:group-hover:border-indigo-700 transition-colors">
               <img 
                 src={user?.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user?.email || 'default')}`} 
                 alt="Avatar" 
@@ -226,13 +231,13 @@ export default function App() {
                 referrerPolicy="no-referrer"
               />
             </div>
-            <div className="overflow-hidden">
+            <div className="overflow-hidden text-left">
               <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
                 {user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">Plano Gratuito</p>
             </div>
-          </div>
+          </button>
           <Button 
             variant="ghost" 
             className="w-full justify-start text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600"
@@ -322,8 +327,11 @@ export default function App() {
               </nav>
 
               <div className="mt-auto pt-6 border-t border-gray-100 dark:border-gray-800">
-                <div className="flex items-center space-x-3 px-2 mb-6">
-                  <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-600 dark:text-indigo-400 overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm">
+                <button
+                  onClick={() => { setIsProfileOpen(true); setIsSidebarOpen(false); }}
+                  className="flex items-center space-x-3 px-2 mb-6 w-full rounded-xl py-2 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all cursor-pointer group"
+                >
+                  <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-600 dark:text-indigo-400 overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm group-hover:border-indigo-300 dark:group-hover:border-indigo-700 transition-colors">
                     <img 
                       src={user?.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user?.email || 'default')}`} 
                       alt="Avatar" 
@@ -331,13 +339,13 @@ export default function App() {
                       referrerPolicy="no-referrer"
                     />
                   </div>
-                  <div className="overflow-hidden">
+                  <div className="overflow-hidden text-left">
                     <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
                       {user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email}
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">Plano Gratuito</p>
                   </div>
-                </div>
+                </button>
                 <Button 
                   variant="ghost" 
                   className="w-full justify-start text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600"
@@ -472,6 +480,9 @@ export default function App() {
           />
         </div>
       </Modal>
+
+      {/* Profile Modal */}
+      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
     </div>
   );
 }
