@@ -58,6 +58,15 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
     return acc + spent;
   }, 0);
 
+  const remainingToPay = categories.reduce((acc, cat) => {
+    const budget = Number(cat.budget) || 0;
+    if (budget === 0) return acc;
+    const spent = currentMonthTransactions
+      .filter(t => t.type === 'expense' && t.category === cat.name)
+      .reduce((sum, t) => sum + t.amount, 0);
+    return acc + Math.max(0, budget - spent);
+  }, 0);
+
   // Data for Pie Chart (Expenses by Category - Current Month)
   const expenseByCategory = currentMonthTransactions
     .filter(t => t.type === 'expense')
@@ -191,8 +200,8 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             </div>
           </div>
           <div>
-            <h2 className={`font-bold text-gray-900 dark:text-white truncate mb-1 ${getFontSizeClass(totalBudget)}`}>
-              {formatCurrency(totalBudget)}
+            <h2 className={`font-bold text-gray-900 dark:text-white truncate mb-1 ${getFontSizeClass(remainingToPay)}`}>
+              {formatCurrency(remainingToPay)}
             </h2>
             <div className="text-orange-600 dark:text-orange-400 text-xs sm:text-sm font-semibold truncate">
               A Pagar
