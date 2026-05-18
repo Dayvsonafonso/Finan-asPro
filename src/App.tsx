@@ -351,7 +351,7 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-1 pt-24 lg:pt-10 px-4 lg:px-10 pb-10 max-w-7xl mx-auto w-full">
-        <header className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 lg:mb-10 gap-4">
+        <header className="flex flex-row items-center justify-between mb-6 lg:mb-10 gap-4">
           {currentView === 'dashboard' ? (
             <div className="flex items-center space-x-4">
               <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-emerald-500 shadow-sm flex-shrink-0">
@@ -390,9 +390,8 @@ export default function App() {
           )}
           <div className="flex items-center space-x-3">
             {currentView !== 'admin' && (
-              <Button onClick={() => handleOpenModal()} className="h-10 lg:h-12 px-4 lg:px-6 rounded-2xl shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20">
-                <PlusCircle className="w-5 h-5 mr-2" />
-                Novo Lançamento
+              <Button onClick={() => handleOpenModal()} className="w-14 h-14 rounded-full p-0 flex items-center justify-center shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20 flex-shrink-0">
+                <PlusCircle className="w-7 h-7" />
               </Button>
             )}
           </div>
