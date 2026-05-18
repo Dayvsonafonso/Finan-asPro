@@ -149,9 +149,9 @@ export default function App() {
 
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Bom dia,';
-    if (hour < 18) return 'Boa tarde,';
-    return 'Boa noite,';
+    if (hour < 12) return 'Bom dia';
+    if (hour < 18) return 'Boa tarde';
+    return 'Boa noite';
   };
   const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'Usuário';
   const avatarUrl = user?.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user?.email || 'default')}`;
@@ -364,10 +364,10 @@ export default function App() {
               </div>
               <div className="flex flex-col">
                 <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
-                  {getGreeting()}
+                  Olá, {displayName}
                 </h2>
                 <p className="text-gray-500 dark:text-gray-400 text-lg lg:text-xl font-medium">
-                  {displayName}
+                  {getGreeting()}
                 </p>
               </div>
             </div>
