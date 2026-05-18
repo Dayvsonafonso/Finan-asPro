@@ -19,7 +19,7 @@ const TOPS = [
   { id: 'dreads02', label: 'Dreads 2' },
   { id: 'frizzle', label: 'Crespo' },
   { id: 'shaggy', label: 'Despenteado' },
-  { id: 'longHair', label: 'Longo' },
+  { id: 'longButNotTooLong', label: 'Longo' },
   { id: 'straight01', label: 'Liso 1' },
   { id: 'straight02', label: 'Liso 2' },
   { id: 'curly', label: 'Cacheado' },
@@ -38,8 +38,8 @@ const EYES = [
   { id: 'squint', label: 'Semicerrado' },
   { id: 'hearts', label: 'Corações' },
   { id: 'eyeRoll', label: 'Tédio' },
-  { id: 'dizzy', label: 'Tonto' },
-  { id: 'close', label: 'Fechado' },
+  { id: 'xDizzy', label: 'Tonto' },
+  { id: 'closed', label: 'Fechado' },
   { id: 'cry', label: 'Chorando' },
 ];
 
@@ -52,7 +52,7 @@ const MOUTHS = [
   { id: 'eating', label: 'Comendo' },
   { id: 'disbelief', label: 'Descrente' },
   { id: 'screamOpen', label: 'Gritando' },
-  { id: 'twang', label: 'Torcida' },
+  { id: 'tongue', label: 'Língua' },
 ];
 
 const CLOTHES = [
