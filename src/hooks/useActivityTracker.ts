@@ -33,9 +33,20 @@ export function useActivityTracker() {
 
       if (error) {
         console.error('Activity tracker upsert error (possível erro de RLS/Permissão no Supabase):', error.message, error.details);
+        // Exibe o erro na tela para ajudar a debugar no celular
+        if (force) {
+           import('sonner').then(({ toast }) => {
+             toast.error(`Erro no Supabase (Aviso para o ADM): ${error.message}`);
+           });
+        }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.warn('Activity tracker exception:', err);
+      if (force) {
+         import('sonner').then(({ toast }) => {
+           toast.error(`Erro de conexão: ${err.message}`);
+         });
+      }
     }
   }, [user]);
 

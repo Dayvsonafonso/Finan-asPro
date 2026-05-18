@@ -221,10 +221,16 @@ export function AdminPanel() {
   };
 
   const getActivityStatus = (user: AuthUser) => {
-    const lastUse = user.last_active_at || user.last_sign_in_at;
-    if (!lastUse) return { label: 'Nunca usou', color: 'text-gray-400', dot: 'bg-gray-300 dark:bg-gray-600' };
+    let lastUseStr = user.last_sign_in_at;
+    if (user.last_active_at) {
+      if (!lastUseStr || new Date(user.last_active_at) > new Date(lastUseStr)) {
+        lastUseStr = user.last_active_at;
+      }
+    }
+    
+    if (!lastUseStr) return { label: 'Nunca usou', color: 'text-gray-400', dot: 'bg-gray-300 dark:bg-gray-600' };
 
-    const diff = Math.max(0, Date.now() - new Date(lastUse).getTime());
+    const diff = Math.max(0, Date.now() - new Date(lastUseStr).getTime());
     const totalMinutes = Math.floor(diff / 60000);
     const hours = Math.floor(totalMinutes / 60);
     const days = Math.floor(hours / 24);
@@ -412,7 +418,10 @@ export function AdminPanel() {
                   <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                     {filteredUsers.map((user, index) => {
                       const activity = getActivityStatus(user);
-                      const lastUse = user.last_active_at || user.last_sign_in_at;
+                      let lastUse = user.last_sign_in_at;
+                      if (user.last_active_at && (!lastUse || new Date(user.last_active_at) > new Date(lastUse))) {
+                        lastUse = user.last_active_at;
+                      }
                       return (
                         <motion.tr
                           key={user.id}
@@ -487,6 +496,10 @@ export function AdminPanel() {
               <div className="lg:hidden divide-y divide-gray-100 dark:divide-gray-800">
                 {filteredUsers.map((user, index) => {
                   const activity = getActivityStatus(user);
+                  let lastUse = user.last_sign_in_at;
+                  if (user.last_active_at && (!lastUse || new Date(user.last_active_at) > new Date(lastUse))) {
+                    lastUse = user.last_active_at;
+                  }
                   return (
                     <motion.div
                       key={user.id}
