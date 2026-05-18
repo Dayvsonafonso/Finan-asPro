@@ -360,10 +360,12 @@ export default function App() {
             </p>
           </div>
           <div className="flex items-center space-x-3">
-            <Button onClick={() => handleOpenModal()} className="h-10 lg:h-12 px-4 lg:px-6 rounded-2xl shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20">
-              <PlusCircle className="w-5 h-5 mr-2" />
-              Novo Lançamento
-            </Button>
+            {currentView !== 'admin' && (
+              <Button onClick={() => handleOpenModal()} className="h-10 lg:h-12 px-4 lg:px-6 rounded-2xl shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20">
+                <PlusCircle className="w-5 h-5 mr-2" />
+                Novo Lançamento
+              </Button>
+            )}
           </div>
         </header>
 
