@@ -86,7 +86,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
       "Saídas": monthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0),
     };
   });
-  
+
   const areaData = last6Months.map(({ month, year, label }) => {
     const accumulatedTransactions = transactions.filter(t => {
       const [tYear, tMonth] = t.date.split('-').map(Number);
@@ -97,7 +97,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
 
     const income = accumulatedTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
     const expense = accumulatedTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-    
+
     return {
       name: label,
       "Saldo": income - expense,
@@ -189,11 +189,11 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-        <Card 
-          title="Saídas por Categoria" 
+        <Card
+          title="Saídas por Categoria"
           subtitle={`Referente a ${now.toLocaleString('pt-BR', { month: 'long', year: 'numeric' }).replace(/^\w/, (c) => c.toUpperCase())}`}
         >
-          <div style={{ height: '350px' }} className="w-full">
+          <div style={{ height: '500px' }} className="w-full">
             {expenseByCategory.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                 <PieChart>
@@ -210,11 +210,11 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip 
+                  <Tooltip
                     formatter={(value: number) => formatCurrency(value)}
-                    contentStyle={{ 
-                      borderRadius: '12px', 
-                      border: 'none', 
+                    contentStyle={{
+                      borderRadius: '12px',
+                      border: 'none',
                       boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                       backgroundColor: isDark ? '#1F2937' : '#FFFFFF',
                       color: isDark ? '#F3F4F6' : '#111827'
@@ -236,18 +236,18 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <BarChart data={barData}>
-                <XAxis 
-                  dataKey="name" 
-                  axisLine={false} 
-                  tickLine={false} 
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
                   tick={{ fill: isDark ? '#9CA3AF' : '#6B7280' }}
                 />
                 <YAxis hide />
-                <Tooltip 
+                <Tooltip
                   formatter={(value: number) => formatCurrency(value)}
-                  contentStyle={{ 
-                    borderRadius: '12px', 
-                    border: 'none', 
+                  contentStyle={{
+                    borderRadius: '12px',
+                    border: 'none',
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                     backgroundColor: isDark ? '#1F2937' : '#FFFFFF',
                     color: isDark ? '#F3F4F6' : '#111827'
@@ -264,8 +264,8 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
 
         {/* Histórico do Saldo Acumulado */}
         <div className="lg:col-span-2">
-          <Card 
-            title="Evolução do Saldo Acumulado" 
+          <Card
+            title="Evolução do Saldo Acumulado"
             subtitle="Histórico do saldo disponível ao final de cada mês"
           >
             <div className="h-[300px] w-full mt-4">
@@ -273,40 +273,40 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
                 <AreaChart data={areaData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#4f46e5" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <XAxis 
-                    dataKey="name" 
-                    axisLine={false} 
-                    tickLine={false} 
+                  <XAxis
+                    dataKey="name"
+                    axisLine={false}
+                    tickLine={false}
                     tick={{ fill: isDark ? '#9CA3AF' : '#6B7280' }}
                   />
-                  <YAxis 
-                    tickLine={false} 
+                  <YAxis
+                    tickLine={false}
                     axisLine={false}
                     tick={{ fill: isDark ? '#9CA3AF' : '#6B7280' }}
                     tickFormatter={(value) => `R$ ${value}`}
                   />
-                  <Tooltip 
+                  <Tooltip
                     formatter={(value: number) => formatCurrency(value)}
-                    contentStyle={{ 
-                      borderRadius: '12px', 
-                      border: 'none', 
+                    contentStyle={{
+                      borderRadius: '12px',
+                      border: 'none',
                       boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                       backgroundColor: isDark ? '#1F2937' : '#FFFFFF',
                       color: isDark ? '#F3F4F6' : '#111827'
                     }}
                     itemStyle={{ color: isDark ? '#F3F4F6' : '#111827' }}
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="Saldo" 
-                    stroke="#4f46e5" 
+                  <Area
+                    type="monotone"
+                    dataKey="Saldo"
+                    stroke="#4f46e5"
                     strokeWidth={3}
-                    fillOpacity={1} 
-                    fill="url(#colorBalance)" 
+                    fillOpacity={1}
+                    fill="url(#colorBalance)"
                   />
                 </AreaChart>
               </ResponsiveContainer>
