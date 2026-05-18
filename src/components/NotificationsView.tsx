@@ -256,7 +256,7 @@ export function NotificationsView() {
                       </p>
                     </div>
 
-                    <div className="flex items-center space-x-1 ml-2 self-start flex-shrink-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                    <div className="flex items-center space-x-1 ml-2 self-start flex-shrink-0 transition-opacity">
                       {/* Ocultar para mim (Apenas para mim, disponível para todos) */}
                       <button
                         onClick={() => handleDismissNotification(notification.id)}
