@@ -31,5 +31,21 @@
       "title": "Carteira Fácil",
       "url": "https://carteirafacil.vercel.app/"
     }
-  }
+  },
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Painel",
+      "description": "Ver resumo financeiro",
+      "url": "/",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Lançamentos",
+      "short_name": "Transações",
+      "description": "Adicionar nova transação",
+      "url": "/",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
 }
