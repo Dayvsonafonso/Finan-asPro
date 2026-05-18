@@ -109,14 +109,16 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-4 lg:gap-6">
         <Card className="bg-indigo-50/30 dark:bg-indigo-950/20 border-indigo-100/50 dark:border-indigo-900/20 py-3 lg:py-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/20 dark:shadow-indigo-950/40">
-                <Wallet className="w-6 h-6" />
-              </div>
-              <h2 className="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white">{formatCurrency(totals.balance)}</h2>
+          <div className="flex items-center space-x-4">
+            <div className="p-3 bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/20 dark:shadow-indigo-950/40 shrink-0">
+              <Wallet className="w-6 h-6" />
             </div>
-            <span className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm font-semibold truncate">Saldo Total</span>
+            <div className="min-w-0">
+              <h2 className="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white leading-tight">{formatCurrency(totals.balance)}</h2>
+              <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm font-semibold truncate mt-1">
+                Saldo Total
+              </div>
+            </div>
           </div>
         </Card>
       </div>
