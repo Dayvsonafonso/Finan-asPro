@@ -200,9 +200,9 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
                   <Pie
                     data={expenseByCategory}
                     cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
+                    cy="45%"
+                    innerRadius={55}
+                    outerRadius={75}
                     paddingAngle={5}
                     dataKey="value"
                   >
@@ -221,7 +221,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
                     }}
                     itemStyle={{ color: isDark ? '#F3F4F6' : '#111827' }}
                   />
-                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ paddingTop: '20px' }} />
+                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ paddingTop: '10px' }} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
