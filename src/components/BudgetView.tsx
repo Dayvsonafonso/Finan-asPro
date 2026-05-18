@@ -84,7 +84,7 @@ function BudgetItem({
             </div>
           </div>
 
-          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto pl-12 sm:pl-0" onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto" onClick={(e) => e.stopPropagation()}>
             {editingId === cat.id ? (
               <div className="flex items-center space-x-1 sm:space-x-2 w-full sm:w-auto justify-between sm:justify-end">
                 <Input
