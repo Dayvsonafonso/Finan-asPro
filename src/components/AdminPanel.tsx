@@ -37,6 +37,13 @@ export function AdminPanel() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortField, setSortField] = useState<SortField>('last_active_at');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [, setTick] = useState(0);
+
+  // Force re-render every 30s to keep relative times updated in real-time
+  useEffect(() => {
+    const timer = setInterval(() => setTick(t => t + 1), 30000);
+    return () => clearInterval(timer);
+  }, []);
 
   const fetchUsers = async (silent = false) => {
     if (!silent) setLoading(true);
@@ -188,36 +195,47 @@ export function AdminPanel() {
     });
   };
 
+  const formatTimeDiff = (diff: number) => {
+    if (diff < 0) return 'Online agora';
+    const totalMinutes = Math.floor(diff / 60000);
+    const hours = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+    const days = Math.floor(hours / 24);
+    const remainingHours = hours % 24;
+
+    if (totalMinutes < 2) return 'Online agora';
+    if (totalMinutes < 60) return `${totalMinutes}min atrás`;
+    if (hours < 24) {
+      return mins > 0 ? `${hours}h ${mins}min atrás` : `${hours}h atrás`;
+    }
+    if (days < 30) {
+      return remainingHours > 0 ? `${days}d ${remainingHours}h atrás` : `${days}d atrás`;
+    }
+    return `${Math.floor(days / 30)} meses atrás`;
+  };
+
   const getTimeSince = (dateStr: string | null) => {
     if (!dateStr) return null;
     const diff = Date.now() - new Date(dateStr).getTime();
-    if (diff < 0) return 'Online agora'; // future dates (clock skew)
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
-
-    if (minutes < 2) return 'Online agora';
-    if (minutes < 60) return `${minutes}min atrás`;
-    if (hours < 24) return `${hours}h atrás`;
-    if (days < 30) return `${days}d atrás`;
-    return `${Math.floor(days / 30)}m atrás`;
+    return formatTimeDiff(diff);
   };
 
   const getActivityStatus = (user: AuthUser) => {
     const lastUse = user.last_active_at || user.last_sign_in_at;
     if (!lastUse) return { label: 'Nunca usou', color: 'text-gray-400', dot: 'bg-gray-300 dark:bg-gray-600' };
 
-    const diff = Date.now() - new Date(lastUse).getTime();
-    const minutes = Math.floor(Math.max(0, diff) / 60000);
-    const hours = Math.floor(Math.max(0, diff) / 3600000);
-    const days = Math.floor(Math.max(0, diff) / 86400000);
+    const diff = Math.max(0, Date.now() - new Date(lastUse).getTime());
+    const totalMinutes = Math.floor(diff / 60000);
+    const hours = Math.floor(totalMinutes / 60);
+    const days = Math.floor(hours / 24);
+    const label = formatTimeDiff(diff);
 
-    if (minutes < 2) return { label: 'Online agora', color: 'text-green-500', dot: 'bg-green-500 animate-pulse' };
-    if (minutes < 60) return { label: `${minutes}min atrás`, color: 'text-green-500', dot: 'bg-green-500' };
-    if (hours < 24) return { label: `${hours}h atrás`, color: 'text-amber-500', dot: 'bg-amber-500' };
-    if (days < 7) return { label: `${days}d atrás`, color: 'text-orange-500', dot: 'bg-orange-500' };
-    if (days < 30) return { label: `${days}d atrás`, color: 'text-gray-500', dot: 'bg-gray-400' };
-    return { label: `${Math.floor(days / 30)}m atrás`, color: 'text-gray-400', dot: 'bg-gray-300 dark:bg-gray-600' };
+    if (totalMinutes < 2) return { label, color: 'text-green-500', dot: 'bg-green-500 animate-pulse' };
+    if (totalMinutes < 60) return { label, color: 'text-green-500', dot: 'bg-green-500' };
+    if (hours < 24) return { label, color: 'text-amber-500', dot: 'bg-amber-500' };
+    if (days < 7) return { label, color: 'text-orange-500', dot: 'bg-orange-500' };
+    if (days < 30) return { label, color: 'text-gray-500', dot: 'bg-gray-400' };
+    return { label, color: 'text-gray-400', dot: 'bg-gray-300 dark:bg-gray-600' };
   };
 
   const SortIcon = ({ field }: { field: SortField }) => {
