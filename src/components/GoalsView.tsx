@@ -160,7 +160,7 @@ export function GoalsView() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
         <Card className="bg-emerald-50/30 dark:bg-emerald-950/20 border-emerald-100/50 dark:border-emerald-900/20 flex flex-col justify-between py-4">
           <div className="mb-3">
             <div className="inline-flex p-2.5 bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-500/20 dark:shadow-emerald-950/40">
@@ -193,7 +193,7 @@ export function GoalsView() {
           </div>
         </Card>
 
-        <Card className="bg-orange-50/30 dark:bg-orange-950/20 border-orange-100/50 dark:border-orange-900/20 flex flex-col justify-between py-4">
+        <Card className="col-span-2 md:col-span-1 bg-orange-50/30 dark:bg-orange-950/20 border-orange-100/50 dark:border-orange-900/20 flex flex-col justify-between py-4">
           <div className="mb-3">
             <div className="inline-flex p-2.5 bg-orange-500 text-white rounded-xl shadow-lg shadow-orange-500/20 dark:shadow-orange-950/40">
               <Trophy className="w-5 h-5" />
