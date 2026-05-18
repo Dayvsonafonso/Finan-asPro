@@ -356,7 +356,7 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
             </div>
           </div>
           <div>
-            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+            <h2 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
               {formatCurrency(totalIncome)}
             </h2>
             <div className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm font-semibold truncate">
@@ -372,7 +372,7 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
             </div>
           </div>
           <div>
-            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+            <h2 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
               {formatCurrency(totalBudgeted)}
             </h2>
             <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm font-semibold truncate">
@@ -388,7 +388,7 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
             </div>
           </div>
           <div>
-            <h2 className={`text-xl lg:text-2xl font-bold truncate mb-1 ${remainingToBudget < 0 ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>
+            <h2 className={`text-sm sm:text-xl lg:text-2xl font-bold truncate mb-1 ${remainingToBudget < 0 ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>
               {formatCurrency(remainingToBudget)}
             </h2>
             <div className="text-blue-600 dark:text-blue-400 text-xs sm:text-sm font-semibold truncate">

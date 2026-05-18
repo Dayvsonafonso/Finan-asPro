@@ -72,6 +72,13 @@ export function GoalsView() {
     return { saved, target, averagePercent };
   }, [goals]);
 
+  const getFontSizeClass = (value: number) => {
+    const len = formatCurrency(value).length;
+    if (len > 12) return 'text-[13px] sm:text-xl lg:text-3xl';
+    if (len > 10) return 'text-base sm:text-2xl lg:text-3xl';
+    return 'text-lg sm:text-2xl lg:text-3xl';
+  };
+
   const handleOpenNew = () => {
     setEditingGoal(null);
     setName('');
@@ -168,7 +175,7 @@ export function GoalsView() {
             </div>
           </div>
           <div>
-            <h2 className="text-2xl lg:text-3xl font-black text-gray-900 dark:text-white truncate mb-1">
+            <h2 className={`font-black text-gray-900 dark:text-white truncate mb-1 ${getFontSizeClass(totals.saved)}`}>
               {formatCurrency(totals.saved)}
             </h2>
             <div className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm font-semibold truncate">
@@ -184,7 +191,7 @@ export function GoalsView() {
             </div>
           </div>
           <div>
-            <h2 className="text-2xl lg:text-3xl font-black text-gray-900 dark:text-white truncate mb-1">
+            <h2 className={`font-black text-gray-900 dark:text-white truncate mb-1 ${getFontSizeClass(totals.target)}`}>
               {formatCurrency(totals.target)}
             </h2>
             <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm font-semibold truncate">

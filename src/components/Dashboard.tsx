@@ -131,7 +131,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             </div>
           </div>
           <div>
-            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+            <h2 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
               {formatCurrency(currentMonthTotals.income)}
             </h2>
             <div className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm font-semibold truncate">
@@ -147,7 +147,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             </div>
           </div>
           <div>
-            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+            <h2 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
               {formatCurrency(currentMonthTotals.expense)}
             </h2>
             <div className="text-red-600 dark:text-red-400 text-xs sm:text-sm font-semibold truncate">
@@ -163,7 +163,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             </div>
           </div>
           <div>
-            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+            <h2 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
               {formatCurrency(totals.balance - (currentMonthTotals.income - currentMonthTotals.expense))}
             </h2>
             <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm font-semibold truncate">
@@ -179,7 +179,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             </div>
           </div>
           <div>
-            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+            <h2 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
               {formatCurrency(totalBudget)}
             </h2>
             <div className="text-orange-600 dark:text-orange-400 text-xs sm:text-sm font-semibold truncate">
