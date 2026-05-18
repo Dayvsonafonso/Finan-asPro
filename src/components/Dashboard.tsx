@@ -108,77 +108,74 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
     <div className="space-y-6 lg:space-y-8">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-4 lg:gap-6">
-        <Card className="bg-indigo-600 text-white border-none">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-white/20 rounded-lg">
-              <Wallet className="w-6 h-6" />
+        <Card className="bg-[#1E293B] text-white border-none py-2 lg:py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-white/10 rounded-xl">
+                <Wallet className="w-6 h-6" />
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-bold">{formatCurrency(totals.balance)}</h2>
             </div>
-            <span className="text-xs font-medium bg-white/20 px-2 py-1 rounded-full">Saldo Total</span>
+            <span className="text-xs font-medium bg-white/10 px-3 py-1.5 rounded-full whitespace-nowrap">Saldo Total</span>
           </div>
-          <h2 className="text-3xl lg:text-4xl font-bold">{formatCurrency(totals.balance)}</h2>
-          <p className="text-indigo-100 text-sm mt-2">Disponível para uso</p>
         </Card>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        <Card className="border-l-4 border-l-emerald-500 dark:bg-gray-900">
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
+        <Card className="dark:bg-gray-900">
+          <div className="flex items-center space-x-2 mb-3 lg:mb-4">
             <div className="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-emerald-600 dark:text-emerald-400">
-              <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6" />
+              <TrendingUp className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
-            <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-full hidden sm:inline-block">Entradas</span>
+            <span className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm truncate">
+              + Entradas do mês
+            </span>
           </div>
-          <h2 className="text-xl lg:text-3xl font-bold text-gray-900 dark:text-white truncate">{formatCurrency(currentMonthTotals.income)}</h2>
-          <div className="flex items-center text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm mt-2">
-            <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
-            <span className="truncate">Entradas do mês</span>
-          </div>
+          <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate">
+            {formatCurrency(currentMonthTotals.income)}
+          </h2>
         </Card>
 
-        <Card className="border-l-4 border-l-red-500 dark:bg-gray-900">
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
+        <Card className="dark:bg-gray-900">
+          <div className="flex items-center space-x-2 mb-3 lg:mb-4">
             <div className="p-2 bg-red-50 dark:bg-red-900/20 rounded-lg text-red-600 dark:text-red-400">
-              <TrendingDown className="w-5 h-5 lg:w-6 lg:h-6" />
+              <TrendingDown className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
-            <span className="text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-full hidden sm:inline-block">Saídas</span>
+            <span className="text-red-600 dark:text-red-400 text-xs sm:text-sm truncate">
+              - Saídas do mês
+            </span>
           </div>
-          <h2 className="text-xl lg:text-3xl font-bold text-gray-900 dark:text-white truncate">{formatCurrency(currentMonthTotals.expense)}</h2>
-          <div className="flex items-center text-red-600 dark:text-red-400 text-xs sm:text-sm mt-2">
-            <Minus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
-            <span className="truncate">Saídas do mês</span>
-          </div>
+          <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate">
+            {formatCurrency(currentMonthTotals.expense)}
+          </h2>
         </Card>
 
-        <Card className="border-l-4 border-l-indigo-500 dark:bg-gray-900">
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
+        <Card className="dark:bg-gray-900">
+          <div className="flex items-center space-x-2 mb-3 lg:mb-4">
             <div className="p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg text-indigo-600 dark:text-indigo-400">
-              <History className="w-5 h-5 lg:w-6 lg:h-6" />
+              <History className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
-            <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 px-2 py-1 rounded-full hidden sm:inline-block">Patrimônio</span>
+            <span className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm truncate">
+              Meses anteriores
+            </span>
           </div>
-          <h2 className="text-xl lg:text-3xl font-bold text-gray-900 dark:text-white truncate">
+          <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate">
             {formatCurrency(totals.balance - (currentMonthTotals.income - currentMonthTotals.expense))}
           </h2>
-          <div className="flex items-center text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm mt-2">
-            <History className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
-            <span className="truncate">Meses anteriores</span>
-          </div>
         </Card>
 
-        <Card className="border-l-4 border-l-orange-500 dark:bg-gray-900">
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
+        <Card className="dark:bg-gray-900">
+          <div className="flex items-center space-x-2 mb-3 lg:mb-4">
             <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-orange-600 dark:text-orange-400">
-              <Target className="w-5 h-5 lg:w-6 lg:h-6" />
+              <Target className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
-            <span className="text-xs font-medium text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded-full hidden sm:inline-block">A Pagar</span>
+            <span className="text-orange-600 dark:text-orange-400 text-xs sm:text-sm truncate">
+              A Pagar ({formatCurrency(usedBudget)})
+            </span>
           </div>
-          <h2 className="text-xl lg:text-3xl font-bold text-gray-900 dark:text-white truncate">
+          <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate">
             {formatCurrency(totalBudget)}
           </h2>
-          <div className="flex items-center text-orange-600 dark:text-orange-400 text-xs sm:text-sm mt-2">
-            <Target className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
-            <span className="truncate">{formatCurrency(usedBudget)} utilizados</span>
-          </div>
         </Card>
       </div>
 
