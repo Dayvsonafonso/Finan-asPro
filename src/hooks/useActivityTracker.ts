@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { toast } from 'sonner';
 
 /**
  * Tracks user activity by updating a `user_activity` table in Supabase.
- * Updates on mount and then every 5 minutes while the user is active.
+ * Updates on mount and then every 1 minute while the user is active.
  * Also updates on window focus (e.g., user returns to the tab).
  */
 export function useActivityTracker() {
@@ -15,7 +16,7 @@ export function useActivityTracker() {
     if (!user) return;
 
     try {
-      await supabase
+      const { error } = await supabase
         .from('user_activity')
         .upsert(
           {
@@ -24,9 +25,13 @@ export function useActivityTracker() {
           },
           { onConflict: 'user_id' }
         );
+
+      if (error) {
+        console.error('Supabase upsert error:', error);
+        toast.error(`Erro no rastreamento: ${error.message}`);
+      }
     } catch (err) {
-      // Silently fail — don't break the app if table doesn't exist yet
-      console.warn('Activity tracker: could not update', err);
+      console.warn('Activity tracker exception:', err);
     }
   };
 
