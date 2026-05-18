@@ -64,29 +64,29 @@ function BudgetItem({
       </div>
       <div className="pl-8">
         <div
-          className="flex items-center justify-between mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+          className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 cursor-pointer hover:opacity-80 transition-opacity gap-3 sm:gap-0"
           onClick={() => toggleExpand(cat.id)}
         >
           <div className="flex items-center space-x-3">
             <div
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
+              className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
               style={{ backgroundColor: `${cat.color}20` }}
             >
               <div className="w-5 h-5" style={{ color: cat.color }}>
                 <Target className="w-5 h-5" />
               </div>
             </div>
-            <div>
-              <h4 className="font-semibold text-gray-900 dark:text-white">{cat.name}</h4>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="min-w-0 flex-1">
+              <h4 className="font-semibold text-gray-900 dark:text-white truncate">{cat.name}</h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                 Gasto: {formatCurrency(spent)}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-4" onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto pl-12 sm:pl-0" onClick={(e) => e.stopPropagation()}>
             {editingId === cat.id ? (
-              <div className="flex items-center space-x-1 sm:space-x-2">
+              <div className="flex items-center space-x-1 sm:space-x-2 w-full sm:w-auto justify-between sm:justify-end">
                 <Input
                   type="text"
                   inputMode="numeric"
@@ -110,47 +110,51 @@ function BudgetItem({
                       setEditingId(null);
                     }
                   }}
-                  className="w-24 sm:w-28 h-9 text-sm"
+                  className="w-full sm:w-28 h-9 text-sm max-w-[120px] sm:max-w-none"
                   autoFocus
                 />
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => handleSave(cat.id)}
-                  className="text-green-500 h-9 w-9 p-0 flex-shrink-0"
-                >
-                  <Check className="w-5 h-5" />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => setEditingId(null)}
-                  className="text-red-500 h-9 w-9 p-0 flex-shrink-0"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
+                <div className="flex items-center space-x-1 flex-shrink-0">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => handleSave(cat.id)}
+                    className="text-green-500 h-9 w-9 p-0"
+                  >
+                    <Check className="w-5 h-5" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => setEditingId(null)}
+                    className="text-red-500 h-9 w-9 p-0"
+                  >
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
               </div>
             ) : (
-              <div className="flex items-center space-x-3">
-                <div className="text-right">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+              <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-2 sm:space-x-3">
+                <div className="text-left sm:text-right flex-1 sm:flex-none min-w-0">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                     Orçado: {formatCurrency(budget)}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                     {budget > 0
                       ? `Restante: ${formatCurrency(budget - spent)}`
                       : 'Sem limite definido'}
                   </p>
                 </div>
-                <Button size="icon" variant="ghost" onClick={() => handleEdit(cat)} className="h-8 w-8">
-                  <Edit2 className="w-4 h-4 text-gray-500" />
-                </Button>
-                <div className="pl-2 border-l border-gray-200 dark:border-gray-700 pointer-events-none">
-                  {expandedId === cat.id ? (
-                    <ChevronUp className="w-5 h-5 text-gray-400" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-gray-400" />
-                  )}
+                <div className="flex items-center space-x-1 flex-shrink-0">
+                  <Button size="icon" variant="ghost" onClick={() => handleEdit(cat)} className="h-8 w-8">
+                    <Edit2 className="w-4 h-4 text-gray-500" />
+                  </Button>
+                  <div className="pl-1 sm:pl-2 border-l border-gray-200 dark:border-gray-700 pointer-events-none">
+                    {expandedId === cat.id ? (
+                      <ChevronUp className="w-5 h-5 text-gray-400" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-gray-400" />
+                    )}
+                  </div>
                 </div>
               </div>
             )}
