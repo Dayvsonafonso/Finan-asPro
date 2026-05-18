@@ -191,7 +191,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         <Card 
           title="Saídas por Categoria" 
-          subtitle={`Referente a ${now.toLocaleString('pt-BR', { month: 'long', year: 'numeric' })}`}
+          subtitle={`Referente a ${now.toLocaleString('pt-BR', { month: 'long', year: 'numeric' }).replace(/^\w/, (c) => c.toUpperCase())}`}
         >
           <div className="h-[300px] w-full">
             {expenseByCategory.length > 0 ? (
