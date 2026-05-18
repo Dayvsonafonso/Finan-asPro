@@ -342,45 +342,51 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Renda Mensal (Atual)</p>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-                {formatCurrency(totalIncome)}
-              </h3>
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+        <Card className="dark:bg-gray-900 flex flex-col justify-between p-4 sm:p-5">
+          <div className="mb-3 lg:mb-4">
+            <div className="inline-flex p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-emerald-600 dark:text-emerald-400">
+              <TrendingUp className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
-            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
+          </div>
+          <div>
+            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+              {formatCurrency(totalIncome)}
+            </h2>
+            <div className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm truncate">
+              Renda Mensal
             </div>
           </div>
         </Card>
 
-        <Card className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Orçado</p>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-                {formatCurrency(totalBudgeted)}
-              </h3>
+        <Card className="dark:bg-gray-900 flex flex-col justify-between p-4 sm:p-5">
+          <div className="mb-3 lg:mb-4">
+            <div className="inline-flex p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg text-indigo-600 dark:text-indigo-400">
+              <Target className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
-            <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center">
-              <Target className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+          </div>
+          <div>
+            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+              {formatCurrency(totalBudgeted)}
+            </h2>
+            <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm truncate">
+              Total Orçado
             </div>
           </div>
         </Card>
 
-        <Card className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Disponível para Alocar</p>
-              <h3 className={`text-2xl font-bold mt-1 ${remainingToBudget < 0 ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>
-                {formatCurrency(remainingToBudget)}
-              </h3>
+        <Card className="dark:bg-gray-900 flex flex-col justify-between p-4 sm:p-5 col-span-2 lg:col-span-1">
+          <div className="mb-3 lg:mb-4">
+            <div className="inline-flex p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600 dark:text-blue-400">
+              <Wallet className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
-            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-              <Wallet className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+          </div>
+          <div>
+            <h2 className={`text-xl lg:text-2xl font-bold truncate mb-1 ${remainingToBudget < 0 ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>
+              {formatCurrency(remainingToBudget)}
+            </h2>
+            <div className="text-blue-600 dark:text-blue-400 text-xs sm:text-sm truncate">
+              Disponível para Alocar
             </div>
           </div>
         </Card>
