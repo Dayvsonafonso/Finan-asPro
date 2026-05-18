@@ -321,6 +321,18 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
   const totalBudgeted = expenseCategories.reduce((sum, cat) => sum + (Number(cat.budget) || 0), 0);
   const remainingToBudget = totalIncome - totalBudgeted;
 
+  const getFontSizeClass = (value: number) => {
+    const formatted = formatCurrency(value);
+    const digits = formatted.replace(/\D/g, '').length;
+    if (digits < 7) {
+      return 'text-xl lg:text-2xl';
+    }
+    if (digits >= 9) {
+      return 'text-sm sm:text-xl lg:text-2xl';
+    }
+    return 'text-base sm:text-xl lg:text-2xl';
+  };
+
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState<string>('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -356,7 +368,7 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
             </div>
           </div>
           <div>
-            <h2 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+            <h2 className={`font-bold text-gray-900 dark:text-white truncate mb-1 ${getFontSizeClass(totalIncome)}`}>
               {formatCurrency(totalIncome)}
             </h2>
             <div className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm font-semibold truncate">
@@ -372,7 +384,7 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
             </div>
           </div>
           <div>
-            <h2 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+            <h2 className={`font-bold text-gray-900 dark:text-white truncate mb-1 ${getFontSizeClass(totalBudgeted)}`}>
               {formatCurrency(totalBudgeted)}
             </h2>
             <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm font-semibold truncate">
@@ -388,7 +400,7 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
             </div>
           </div>
           <div>
-            <h2 className={`text-sm sm:text-xl lg:text-2xl font-bold truncate mb-1 ${remainingToBudget < 0 ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>
+            <h2 className={`font-bold truncate mb-1 ${remainingToBudget < 0 ? 'text-red-500' : 'text-gray-900 dark:text-white'} ${getFontSizeClass(remainingToBudget)}`}>
               {formatCurrency(remainingToBudget)}
             </h2>
             <div className="text-blue-600 dark:text-blue-400 text-xs sm:text-sm font-semibold truncate">

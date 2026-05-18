@@ -38,6 +38,18 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
     { income: 0, expense: 0 }
   );
 
+  const getFontSizeClass = (value: number) => {
+    const formatted = formatCurrency(value);
+    const digits = formatted.replace(/\D/g, '').length;
+    if (digits < 7) {
+      return 'text-xl lg:text-2xl';
+    }
+    if (digits >= 9) {
+      return 'text-sm sm:text-xl lg:text-2xl';
+    }
+    return 'text-base sm:text-xl lg:text-2xl';
+  };
+
   const totalBudget = categories.reduce((acc, cat) => acc + (Number(cat.budget) || 0), 0);
   const usedBudget = categories.reduce((acc, cat) => {
     const spent = currentMonthTransactions
@@ -131,7 +143,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             </div>
           </div>
           <div>
-            <h2 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+            <h2 className={`font-bold text-gray-900 dark:text-white truncate mb-1 ${getFontSizeClass(currentMonthTotals.income)}`}>
               {formatCurrency(currentMonthTotals.income)}
             </h2>
             <div className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm font-semibold truncate">
@@ -147,7 +159,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             </div>
           </div>
           <div>
-            <h2 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+            <h2 className={`font-bold text-gray-900 dark:text-white truncate mb-1 ${getFontSizeClass(currentMonthTotals.expense)}`}>
               {formatCurrency(currentMonthTotals.expense)}
             </h2>
             <div className="text-red-600 dark:text-red-400 text-xs sm:text-sm font-semibold truncate">
@@ -163,7 +175,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             </div>
           </div>
           <div>
-            <h2 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+            <h2 className={`font-bold text-gray-900 dark:text-white truncate mb-1 ${getFontSizeClass(totals.balance - (currentMonthTotals.income - currentMonthTotals.expense))}`}>
               {formatCurrency(totals.balance - (currentMonthTotals.income - currentMonthTotals.expense))}
             </h2>
             <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm font-semibold truncate">
@@ -179,7 +191,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             </div>
           </div>
           <div>
-            <h2 className="text-sm sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+            <h2 className={`font-bold text-gray-900 dark:text-white truncate mb-1 ${getFontSizeClass(totalBudget)}`}>
               {formatCurrency(totalBudget)}
             </h2>
             <div className="text-orange-600 dark:text-orange-400 text-xs sm:text-sm font-semibold truncate">
