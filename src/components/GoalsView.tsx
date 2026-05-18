@@ -226,7 +226,7 @@ export function GoalsView() {
               >
                 {/* Glow circular de fundo */}
                 <div 
-                  className="absolute -right-6 -top-6 w-28 h-28 rounded-full blur-3xl opacity-[0.08]" 
+                  className="absolute -right-6 -top-6 w-28 h-28 rounded-full blur-3xl opacity-[0.08] pointer-events-none" 
                   style={{ backgroundColor: goal.color }}
                 />
 
@@ -253,7 +253,7 @@ export function GoalsView() {
                       </div>
                     </div>
                     
-                    <div className="flex items-center space-x-1 shrink-0">
+                    <div className="flex items-center space-x-1 shrink-0 relative z-10">
                       <Button size="icon" variant="ghost" onClick={() => handleOpenEdit(goal)} className="h-8 w-8 hover:bg-gray-100 dark:hover:bg-gray-800">
                         <Edit2 className="w-4 h-4 text-gray-500" />
                       </Button>
