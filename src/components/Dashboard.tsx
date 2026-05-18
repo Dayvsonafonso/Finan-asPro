@@ -181,7 +181,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
               {formatCurrency(totalBudget)}
             </h2>
             <div className="text-orange-600 dark:text-orange-400 text-xs sm:text-sm truncate">
-              A Pagar ({formatCurrency(usedBudget)})
+              A Pagar
             </div>
           </div>
         </Card>
