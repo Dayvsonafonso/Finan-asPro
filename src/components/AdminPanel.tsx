@@ -38,8 +38,8 @@ export function AdminPanel() {
   const [sortField, setSortField] = useState<SortField>('last_active_at');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
-  const fetchUsers = async () => {
-    setLoading(true);
+  const fetchUsers = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       // 1. Fetch all auth users
       const { data, error } = await supabase.auth.admin.listUsers({
@@ -80,12 +80,19 @@ export function AdminPanel() {
     } catch (err: any) {
       console.error('Error fetching users:', err);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchUsers();
+
+    // Atualiza silenciosamente a cada 15 segundos para dar a sensação de tempo real
+    const interval = setInterval(() => {
+      fetchUsers(true);
+    }, 15000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const filteredUsers = useMemo(() => {

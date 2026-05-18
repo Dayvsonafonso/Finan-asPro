@@ -36,8 +36,8 @@ export function useActivityTracker() {
     // Update immediately on mount
     updateActivity();
 
-    // Update every 5 minutes
-    intervalRef.current = setInterval(updateActivity, 5 * 60 * 1000);
+    // Update every 1 minute
+    intervalRef.current = setInterval(updateActivity, 1 * 60 * 1000);
 
     // Update when user returns to the tab
     const handleFocus = () => updateActivity();
