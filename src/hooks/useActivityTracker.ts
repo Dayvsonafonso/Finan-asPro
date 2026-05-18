@@ -41,11 +41,33 @@ export function useActivityTracker() {
 
     // Update when user returns to the tab
     const handleFocus = () => updateActivity();
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        updateActivity();
+      }
+    };
+
+    // Update on interaction (throttled to once per minute)
+    let lastInteraction = Date.now();
+    const handleInteraction = () => {
+      const now = Date.now();
+      if (now - lastInteraction > 60 * 1000) {
+        lastInteraction = now;
+        updateActivity();
+      }
+    };
+
     window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('touchstart', handleInteraction, { passive: true });
+    document.addEventListener('click', handleInteraction, { passive: true });
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener('touchstart', handleInteraction);
+      document.removeEventListener('click', handleInteraction);
     };
   }, [user]);
 }
