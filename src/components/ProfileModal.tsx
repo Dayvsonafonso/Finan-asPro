@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { User, Lock, Mail, Camera, Eye, EyeOff, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { User, Lock, Mail, Camera, Eye, EyeOff, Check, AlertCircle, Loader2, Image as ImageIcon, Sparkles, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
 import { Button } from './ui/Button';
@@ -15,6 +15,16 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   );
   const [isSavingName, setIsSavingName] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  
+  const [isAvatarSelectionMode, setIsAvatarSelectionMode] = useState(false);
+  const [showAvatarMenu, setShowAvatarMenu] = useState(false);
+
+  const AVATAR_SEEDS = [
+    'Felix', 'Aneka', 'Oliver', 'Mia', 'Jack', 'Zoe', 
+    'Bella', 'Leo', 'Lucy', 'Max', 'Luna', 'Charlie',
+    'Milo', 'Daisy', 'Rocky', 'Coco', 'Toby', 'Lola',
+    'Duke', 'Sadie'
+  ];
 
   // Password change
   const [showPasswordSection, setShowPasswordSection] = useState(false);
@@ -92,6 +102,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       });
       if (error) throw error;
       toast.success('Avatar atualizado!');
+      setIsAvatarSelectionMode(false);
     } catch (err: any) {
       console.error('Preset avatar error:', err);
       toast.error('Erro ao atualizar avatar: ' + (err?.message || 'Erro desconhecido'));
@@ -145,8 +156,59 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     }
   };
 
+  const handleModalClose = () => {
+    if (isAvatarSelectionMode) {
+      setIsAvatarSelectionMode(false);
+    } else {
+      onClose();
+    }
+  };
+
+  if (isAvatarSelectionMode) {
+    return (
+      <Modal isOpen={isOpen} onClose={handleModalClose} title="Escolher Avatar">
+        <div className="space-y-6">
+          <button 
+            onClick={() => setIsAvatarSelectionMode(false)}
+            className="flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 transition-colors"
+          >
+            <ChevronLeft className="w-4 h-4 mr-1" />
+            Voltar para o perfil
+          </button>
+          
+          <div className="grid grid-cols-4 sm:grid-cols-5 gap-4">
+            {AVATAR_SEEDS.map(seed => {
+              const url = `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`;
+              const isSelected = avatarUrl === url;
+              return (
+                <button
+                  key={seed}
+                  onClick={() => handleSelectPreset(seed)}
+                  disabled={isUploadingAvatar}
+                  className={`relative aspect-square rounded-full overflow-hidden border-2 transition-all ${
+                    isSelected 
+                      ? 'border-indigo-600 scale-110 shadow-md ring-2 ring-indigo-500/30' 
+                      : 'border-gray-200 dark:border-gray-700 hover:border-indigo-400 hover:scale-105 cursor-pointer opacity-70 hover:opacity-100'
+                  }`}
+                >
+                  <img src={url} alt={seed} className="w-full h-full object-cover" />
+                </button>
+              );
+            })}
+          </div>
+          
+          {isUploadingAvatar && (
+            <div className="flex justify-center mt-4">
+              <Loader2 className="w-6 h-6 text-indigo-600 animate-spin" />
+            </div>
+          )}
+        </div>
+      </Modal>
+    );
+  }
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Meu Perfil">
+    <Modal isOpen={isOpen} onClose={handleModalClose} title="Meu Perfil">
       <div className="space-y-6">
         {/* Avatar & Info Header */}
         <div className="flex flex-col items-center text-center pb-6 border-b border-gray-100 dark:border-gray-800">
@@ -159,7 +221,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               className="hidden"
             />
             <button
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => setShowAvatarMenu(!showAvatarMenu)}
               disabled={isUploadingAvatar}
               className="relative group cursor-pointer"
             >
@@ -185,35 +247,57 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
             <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-lg pointer-events-none">
               <Camera className="w-4 h-4 text-white" />
             </div>
+
+            {/* Avatar Options Menu */}
+            <AnimatePresence>
+              {showAvatarMenu && (
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowAvatarMenu(false)}
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50 py-2"
+                  >
+                    <button
+                      onClick={() => {
+                        setShowAvatarMenu(false);
+                        fileInputRef.current?.click();
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center">
+                        <ImageIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                      </div>
+                      Escolher Foto
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowAvatarMenu(false);
+                        setIsAvatarSelectionMode(true);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center">
+                        <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                      </div>
+                      Escolher Avatar
+                    </button>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
           </div>
           <h3 className="text-lg font-bold text-gray-900 dark:text-white">
             {user?.user_metadata?.full_name || user?.user_metadata?.name || 'Usuário'}
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">{user?.email}</p>
-          
-          <div className="mt-6 w-full max-w-sm">
-            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Ou escolha um avatar pronto</p>
-            <div className="flex gap-3 justify-center flex-wrap">
-              {['Felix', 'Aneka', 'Oliver', 'Mia', 'Jack', 'Zoe'].map(seed => {
-                const url = `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`;
-                const isSelected = avatarUrl === url;
-                return (
-                  <button
-                    key={seed}
-                    onClick={() => handleSelectPreset(seed)}
-                    disabled={isUploadingAvatar}
-                    className={`relative w-12 h-12 rounded-full overflow-hidden border-2 transition-all ${
-                      isSelected 
-                        ? 'border-indigo-600 scale-110 shadow-md ring-2 ring-indigo-500/30' 
-                        : 'border-gray-200 dark:border-gray-700 hover:border-indigo-400 hover:scale-105 cursor-pointer opacity-70 hover:opacity-100'
-                    }`}
-                  >
-                    <img src={url} alt={seed} className="w-full h-full object-cover" />
-                  </button>
-                );
-              })}
-            </div>
-          </div>
 
           {isGoogleUser && (
             <span className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
