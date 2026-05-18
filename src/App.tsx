@@ -366,7 +366,7 @@ export default function App() {
                 <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
                   {getGreeting()}
                 </h2>
-                <p className="text-emerald-600 dark:text-emerald-400 text-lg lg:text-xl font-medium">
+                <p className="text-gray-500 dark:text-gray-400 text-lg lg:text-xl font-medium">
                   {displayName}
                 </p>
               </div>
