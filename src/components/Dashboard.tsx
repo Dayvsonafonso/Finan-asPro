@@ -221,7 +221,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
                     }}
                     itemStyle={{ color: isDark ? '#F3F4F6' : '#111827' }}
                   />
-                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ marginTop: '-25px' }} />
+                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ marginTop: '-45px' }} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
