@@ -147,6 +147,15 @@ export default function App() {
     setCurrentView('dashboard');
   }
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Bom dia,';
+    if (hour < 18) return 'Boa tarde,';
+    return 'Boa noite,';
+  };
+  const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'Usuário';
+  const avatarUrl = user?.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user?.email || 'default')}`;
+
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'transactions', label: 'Lançamentos', icon: ArrowUpCircle },
@@ -343,22 +352,42 @@ export default function App() {
       {/* Main Content */}
       <main className="flex-1 pt-24 lg:pt-10 px-4 lg:px-10 pb-10 max-w-7xl mx-auto w-full">
         <header className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 lg:mb-10 gap-4">
-          <div>
-            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
-              {currentView === 'dashboard' && 'Visão Geral'}
-              {currentView === 'transactions' && 'Meus Lançamentos'}
-              {currentView === 'faturas' && 'Minhas Faturas'}
-              {currentView === 'budget' && 'Orçamentos Mensais'}
-              {currentView === 'admin' && 'Painel ADM'}
-            </h2>
-            <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm lg:text-base">
-              {currentView === 'dashboard' && 'Acompanhe seu desempenho financeiro hoje.'}
-              {currentView === 'transactions' && 'Gerencie suas entradas e saídas detalhadamente.'}
-              {currentView === 'faturas' && 'Acompanhe suas parcelas e pagamentos pendentes.'}
-              {currentView === 'budget' && 'Distribua sua renda e defina limites de gastos por categoria.'}
-              {currentView === 'admin' && 'Gerencie e monitore os usuários da plataforma.'}
-            </p>
-          </div>
+          {currentView === 'dashboard' ? (
+            <div className="flex items-center space-x-4">
+              <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-emerald-500 shadow-sm flex-shrink-0">
+                <img
+                  src={avatarUrl}
+                  alt={displayName}
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <div className="flex flex-col">
+                <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
+                  {getGreeting()}
+                </h2>
+                <p className="text-emerald-600 dark:text-emerald-400 text-lg lg:text-xl font-medium">
+                  {displayName}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
+                {currentView === 'transactions' && 'Meus Lançamentos'}
+                {currentView === 'faturas' && 'Minhas Faturas'}
+                {currentView === 'budget' && 'Orçamentos Mensais'}
+                {currentView === 'admin' && 'Painel ADM'}
+                {currentView === 'install' && 'Instalar Aplicativo'}
+              </h2>
+              <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm lg:text-base">
+                {currentView === 'transactions' && 'Gerencie suas entradas e saídas detalhadamente.'}
+                {currentView === 'faturas' && 'Acompanhe suas parcelas e pagamentos pendentes.'}
+                {currentView === 'budget' && 'Distribua sua renda e defina limites de gastos por categoria.'}
+                {currentView === 'admin' && 'Gerencie e monitore os usuários da plataforma.'}
+              </p>
+            </div>
+          )}
           <div className="flex items-center space-x-3">
             {currentView !== 'admin' && (
               <Button onClick={() => handleOpenModal()} className="h-10 lg:h-12 px-4 lg:px-6 rounded-2xl shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20">
