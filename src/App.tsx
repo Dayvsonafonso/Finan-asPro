@@ -394,7 +394,7 @@ export default function App() {
             </div>
           )}
           <div className="flex items-center space-x-3">
-            {currentView !== 'admin' && (
+            {['dashboard', 'transactions', 'faturas', 'budget'].includes(currentView) && (
               <Button onClick={() => handleOpenModal()} className="w-14 h-14 rounded-full p-0 flex items-center justify-center shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20 flex-shrink-0">
                 <PlusCircle className="w-7 h-7" />
               </Button>
