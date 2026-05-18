@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Bell, Send, Trash2, Megaphone, Calendar } from 'lucide-react';
+import { Bell, Send, Trash2, Megaphone, Calendar, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'motion/react';
 import { Card } from './ui/Card';
@@ -16,7 +16,8 @@ interface Notification {
 
 export function NotificationsView() {
   const { user } = useAuth();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [rawNotifications, setRawNotifications] = useState<Notification[]>([]);
+  const [dismissedIds, setDismissedIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   
   // Form fields for Admin
@@ -28,6 +29,11 @@ export function NotificationsView() {
   const isAdmin = user?.email === 'dayvsonafonsoo@gmail.com' || user?.email === 'dayvsonafonsodd@gmail.com' || user?.email === 'afonso.william@gmail.com';
 
   useEffect(() => {
+    // Carrega avisos descartados localmente
+    const saved = localStorage.getItem('dismissed_notifications');
+    if (saved) {
+      setDismissedIds(JSON.parse(saved));
+    }
     fetchNotifications();
   }, []);
 
@@ -41,13 +47,12 @@ export function NotificationsView() {
 
       if (error) {
         if (error.message.includes('relation "notifications" does not exist')) {
-          // Table doesn't exist yet, we will handle this gracefully
-          setNotifications([]);
+          setRawNotifications([]);
         } else {
           throw error;
         }
       } else {
-        setNotifications(data || []);
+        setRawNotifications(data || []);
       }
     } catch (error: any) {
       console.error('Error fetching notifications:', error);
@@ -96,6 +101,15 @@ export function NotificationsView() {
     }
   };
 
+  const handleDismissNotification = (id: string) => {
+    const updated = [...dismissedIds, id];
+    setDismissedIds(updated);
+    localStorage.setItem('dismissed_notifications', JSON.stringify(updated));
+    toast.success('Notificação removida da sua tela!');
+    // Dispara evento para o App.tsx recalcular a bolinha vermelha de novas notificações
+    window.dispatchEvent(new Event('notifications-updated'));
+  };
+
   const handleDeleteNotification = async (id: string) => {
     if (!confirm('Deseja realmente excluir esta notificação? Isso a removerá para todos os usuários.')) {
       return;
@@ -110,7 +124,8 @@ export function NotificationsView() {
       if (error) throw error;
 
       toast.success('Notificação excluída com sucesso!');
-      setNotifications(prev => prev.filter(n => n.id !== id));
+      setRawNotifications(prev => prev.filter(n => n.id !== id));
+      window.dispatchEvent(new Event('notifications-updated'));
     } catch (error: any) {
       console.error('Error deleting notification:', error);
       toast.error('Erro ao excluir notificação.');
@@ -130,6 +145,9 @@ export function NotificationsView() {
     if (diffHours < 24) return `Há ${diffHours} h`;
     return `Há ${diffDays} dias`;
   };
+
+  // Filtra as notificações visíveis (remove as que o usuário excluiu localmente)
+  const visibleNotifications = rawNotifications.filter(n => !dismissedIds.includes(n.id));
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
@@ -188,9 +206,9 @@ export function NotificationsView() {
         <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center space-x-2 mb-2">
           <Bell className="w-5 h-5 text-indigo-500" />
           <span>Mural de Avisos</span>
-          {notifications.length > 0 && (
+          {visibleNotifications.length > 0 && (
             <span className="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs px-2 py-0.5 rounded-full font-bold">
-              {notifications.length}
+              {visibleNotifications.length}
             </span>
           )}
         </h3>
@@ -199,7 +217,7 @@ export function NotificationsView() {
           <div className="flex justify-center items-center py-12">
             <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
-        ) : notifications.length === 0 ? (
+        ) : visibleNotifications.length === 0 ? (
           <Card className="p-8 text-center border border-dashed border-gray-200 dark:border-gray-800/80">
             <div className="mx-auto w-12 h-12 bg-gray-50 dark:bg-gray-900 rounded-full flex items-center justify-center text-gray-400 mb-3">
               <Bell className="w-6 h-6" />
@@ -212,7 +230,7 @@ export function NotificationsView() {
         ) : (
           <div className="grid gap-4">
             <AnimatePresence>
-              {notifications.map((notification) => (
+              {visibleNotifications.map((notification) => (
                 <motion.div
                   key={notification.id}
                   initial={{ opacity: 0, y: 15 }}
@@ -238,15 +256,27 @@ export function NotificationsView() {
                       </p>
                     </div>
 
-                    {isAdmin && (
+                    <div className="flex items-center space-x-1 ml-2 self-start flex-shrink-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                      {/* Ocultar para mim (Apenas para mim, disponível para todos) */}
                       <button
-                        onClick={() => handleDeleteNotification(notification.id)}
-                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-colors ml-2 self-start cursor-pointer opacity-0 group-hover:opacity-100 focus:opacity-100"
-                        title="Excluir aviso"
+                        onClick={() => handleDismissNotification(notification.id)}
+                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-colors cursor-pointer"
+                        title={isAdmin ? "Ocultar para mim" : "Excluir da minha tela"}
                       >
-                        <Trash2 className="w-4 h-4" />
+                        {isAdmin ? <X className="w-4 h-4" /> : <Trash2 className="w-4 h-4" />}
                       </button>
-                    )}
+
+                      {/* Excluir globalmente (Apenas para Admin) */}
+                      {isAdmin && (
+                        <button
+                          onClick={() => handleDeleteNotification(notification.id)}
+                          className="p-1.5 text-red-500 hover:bg-red-100 dark:hover:bg-red-950/40 rounded-lg transition-colors cursor-pointer"
+                          title="Excluir de TODOS os usuários (Global)"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
                   </Card>
                 </motion.div>
               ))}

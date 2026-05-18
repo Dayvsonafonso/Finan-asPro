@@ -65,6 +65,66 @@ export default function App() {
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Calcula notificações não lidas
+  const fetchUnreadCount = React.useCallback(async () => {
+    if (!user) return;
+    try {
+      const { data, error } = await supabase
+        .from('notifications')
+        .select('id, created_at')
+        .order('created_at', { ascending: false });
+
+      if (error) return;
+
+      const lastReadTimeStr = localStorage.getItem('last_read_notification_time');
+      const dismissedIds = JSON.parse(localStorage.getItem('dismissed_notifications') || '[]');
+
+      // Filtra apenas as notificações ativas (que não foram excluídas localmente)
+      const activeNotifications = (data || []).filter((n: any) => !dismissedIds.includes(n.id));
+
+      if (activeNotifications.length === 0) {
+        setUnreadCount(0);
+        return;
+      }
+
+      if (!lastReadTimeStr) {
+        setUnreadCount(activeNotifications.length);
+      } else {
+        const lastReadTime = new Date(lastReadTimeStr).getTime();
+        const unread = activeNotifications.filter((n: any) => new Date(n.created_at).getTime() > lastReadTime);
+        setUnreadCount(unread.length);
+      }
+    } catch (e) {
+      console.warn('Unread count fetch error:', e);
+    }
+  }, [user]);
+
+  // Efeito para monitorar novas notificações periódica e por eventos
+  React.useEffect(() => {
+    if (!user) return;
+    fetchUnreadCount();
+
+    // Atualiza o contador caso o usuário exclua ou chegue algo novo
+    window.addEventListener('notifications-updated', fetchUnreadCount);
+    
+    // Polling opcional a cada 30 segundos
+    const interval = setInterval(fetchUnreadCount, 30000);
+
+    return () => {
+      window.removeEventListener('notifications-updated', fetchUnreadCount);
+      clearInterval(interval);
+    };
+  }, [user, fetchUnreadCount]);
+
+  // Zera o contador quando entra na aba de notificações
+  React.useEffect(() => {
+    if (currentView === 'notifications') {
+      localStorage.setItem('last_read_notification_time', new Date().toISOString());
+      setUnreadCount(0);
+    }
+  }, [currentView]);
 
   // Força uma atualização de atividade imediata sempre que o usuário trocar de aba
   React.useEffect(() => {
@@ -223,7 +283,12 @@ export default function App() {
                 "w-5 h-5",
                 currentView === item.id ? "text-indigo-600 dark:text-indigo-400" : "text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300"
               )} />
-              <span>{item.label}</span>
+              <span className="flex items-center">
+                {item.label}
+                {item.id === 'notifications' && unreadCount > 0 && (
+                  <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse ml-2 flex-shrink-0" />
+                )}
+              </span>
               {currentView === item.id && <ChevronRight className="w-4 h-4 ml-auto" />}
             </button>
           ))}
@@ -278,8 +343,11 @@ export default function App() {
           >
             {theme === 'light' ? <Moon className="w-5 h-5 text-gray-600" /> : <Sun className="w-5 h-5 text-amber-400" />}
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)}>
+          <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="relative">
             <Menu className="w-6 h-6 dark:text-gray-300" />
+            {unreadCount > 0 && (
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+            )}
           </Button>
         </div>
       </div>
@@ -332,7 +400,12 @@ export default function App() {
                     )}
                   >
                     <item.icon className="w-5 h-5" />
-                    <span>{item.label}</span>
+                    <span className="flex items-center">
+                      {item.label}
+                      {item.id === 'notifications' && unreadCount > 0 && (
+                        <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse ml-2 flex-shrink-0" />
+                      )}
+                    </span>
                   </button>
                 ))}
               </nav>
