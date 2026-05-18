@@ -193,7 +193,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
           title="Saídas por Categoria" 
           subtitle={`Referente a ${now.toLocaleString('pt-BR', { month: 'long', year: 'numeric' })}`}
         >
-          <div className="h-[250px] lg:h-[300px] w-full">
+          <div className="h-[300px] w-full">
             {expenseByCategory.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                 <PieChart>
@@ -233,7 +233,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
         </Card>
 
         <Card title="Entradas vs Saídas">
-          <div className="h-[250px] lg:h-[300px] w-full">
+          <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <BarChart data={barData}>
                 <XAxis 
@@ -268,7 +268,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
             title="Evolução do Saldo Acumulado" 
             subtitle="Histórico do saldo disponível ao final de cada mês"
           >
-            <div className="h-[250px] lg:h-[300px] w-full mt-4">
+            <div className="h-[300px] w-full mt-4">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={areaData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
