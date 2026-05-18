@@ -66,7 +66,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
     const d = new Date();
     d.setDate(1); // Set to 1st of the month to avoid rollover bugs (e.g., Feb 29th)
     d.setMonth(d.getMonth() - i);
-    const label = d.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
+    const label = d.toLocaleString('pt-BR', { month: 'long' });
     return {
       month: d.getMonth(),
       year: d.getFullYear(),
@@ -82,8 +82,8 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
 
     return {
       name: label,
-      entradas: monthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0),
-      saídas: monthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0),
+      "Entradas": monthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0),
+      "Saídas": monthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0),
     };
   });
   
@@ -255,8 +255,8 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
                   itemStyle={{ color: isDark ? '#F3F4F6' : '#111827' }}
                 />
                 <Legend verticalAlign="bottom" height={36} wrapperStyle={{ paddingTop: '20px' }} />
-                <Bar dataKey="entradas" fill="#10B981" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="saídas" fill="#EF4444" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Entradas" fill="#10B981" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Saídas" fill="#EF4444" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
