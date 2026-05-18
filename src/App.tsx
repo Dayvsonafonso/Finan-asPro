@@ -402,9 +402,10 @@ export default function App() {
             {currentView === 'goals' && (
               <Button 
                 onClick={() => window.dispatchEvent(new CustomEvent('open-new-goal-modal'))} 
-                className="w-14 h-14 rounded-full p-0 flex items-center justify-center shadow-lg shadow-indigo-100 dark:shadow-indigo-900/20 flex-shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white border-none"
+                className="flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-2 px-4 shadow-lg shadow-indigo-500/20 dark:shadow-indigo-950/40 border-none font-bold text-sm h-12 shrink-0 transition-all duration-300 hover:scale-105 active:scale-95"
               >
-                <PlusCircle className="w-7 h-7" />
+                <PlusCircle className="w-5 h-5" />
+                <span>Nova Meta</span>
               </Button>
             )}
           </div>
