@@ -193,7 +193,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
           title="Saídas por Categoria" 
           subtitle={`Referente a ${now.toLocaleString('pt-BR', { month: 'long', year: 'numeric' }).replace(/^\w/, (c) => c.toUpperCase())}`}
         >
-          <div className="h-[340px] sm:h-[300px] w-full">
+          <div style={{ height: '350px' }} className="w-full">
             {expenseByCategory.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                 <PieChart>
@@ -221,7 +221,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
                     }}
                     itemStyle={{ color: isDark ? '#F3F4F6' : '#111827' }}
                   />
-                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ marginTop: '-45px' }} />
+                  <Legend verticalAlign="bottom" wrapperStyle={{ marginTop: '-20px' }} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
