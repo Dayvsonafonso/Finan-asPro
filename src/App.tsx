@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { 
   LayoutDashboard, 
   ArrowUpCircle, 
@@ -45,7 +45,7 @@ type View = 'dashboard' | 'transactions' | 'faturas' | 'admin' | 'budget' | 'goa
 export default function App() {
   const { user, signOut, loading: authLoading } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  useActivityTracker();
+  const { updateActivity } = useActivityTracker();
   const { 
     transactions, 
     categories, 
@@ -62,6 +62,13 @@ export default function App() {
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  // Força uma atualização de atividade imediata sempre que o usuário trocar de aba
+  React.useEffect(() => {
+    if (user && updateActivity) {
+      updateActivity(true);
+    }
+  }, [currentView, user, updateActivity]);
 
   if (authLoading) {
     return (

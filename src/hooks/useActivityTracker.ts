@@ -12,12 +12,12 @@ export function useActivityTracker() {
   const lastUpdateRef = useRef<number>(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const updateActivity = useCallback(async () => {
+  const updateActivity = useCallback(async (force = false) => {
     if (!user) return;
 
-    // Throttle: don't update more than once every 30 seconds
+    // Throttle: don't update more than once every 30 seconds unless forced
     const now = Date.now();
-    if (now - lastUpdateRef.current < 30000) return;
+    if (!force && now - lastUpdateRef.current < 30000) return;
     lastUpdateRef.current = now;
 
     try {
@@ -111,4 +111,6 @@ export function useActivityTracker() {
       window.removeEventListener('pagehide', handlePageHide);
     };
   }, [user, updateActivity]);
+
+  return { updateActivity };
 }
