@@ -376,7 +376,7 @@ export default function App() {
               <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
                 {currentView === 'transactions' && 'Meus Lançamentos'}
                 {currentView === 'faturas' && 'Minhas Faturas'}
-                {currentView === 'budget' && 'Orçamentos Mensais'}
+                {currentView === 'budget' && 'Orçamento Mensal'}
                 {currentView === 'admin' && 'Painel ADM'}
                 {currentView === 'install' && 'Instalar Aplicativo'}
               </h2>

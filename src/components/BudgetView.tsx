@@ -134,11 +134,11 @@ function BudgetItem({
               </div>
             ) : (
               <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-2 sm:space-x-3">
-                <div className="text-left sm:text-right flex-1 sm:flex-none min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                <div className="text-left sm:text-right flex-1 sm:flex-none">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
                     Orçado: {formatCurrency(budget)}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     {budget > 0
                       ? `Restante: ${formatCurrency(budget - spent)}`
                       : 'Sem limite definido'}
