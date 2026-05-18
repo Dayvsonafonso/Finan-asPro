@@ -354,7 +354,7 @@ export default function App() {
         <header className="flex flex-row items-center justify-between mb-6 lg:mb-10 gap-4">
           {currentView === 'dashboard' ? (
             <div className="flex items-center space-x-4">
-              <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-emerald-500 shadow-sm flex-shrink-0">
+              <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-gray-500 dark:border-gray-400 shadow-sm flex-shrink-0">
                 <img
                   src={avatarUrl}
                   alt={displayName}
