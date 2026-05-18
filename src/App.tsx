@@ -16,7 +16,8 @@ import {
   Target,
   Smartphone,
   ShieldCheck,
-  Trophy
+  Trophy,
+  Wallet
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Toaster, toast } from 'sonner';
@@ -189,7 +190,7 @@ export default function App() {
             className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity active:scale-[0.98] text-left border-none bg-transparent p-0 outline-none"
           >
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/20">
-              <PlusCircle className="w-6 h-6" />
+              <Wallet className="w-6 h-6" />
             </div>
             <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Carteira<span className="text-indigo-600">Fácil</span></h1>
           </button>
@@ -262,7 +263,7 @@ export default function App() {
           onClick={() => setCurrentView('dashboard')}
           className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity active:scale-[0.98] border-none bg-transparent p-0 outline-none"
         >
-          <PlusCircle className="w-6 h-6 text-indigo-600" />
+          <Wallet className="w-6 h-6 text-indigo-600" />
           <span className="font-bold text-lg dark:text-white">CarteiraFácil</span>
         </button>
         <div className="flex items-center space-x-2">
@@ -305,7 +306,7 @@ export default function App() {
                   }}
                   className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity active:scale-[0.98] border-none bg-transparent p-0 outline-none"
                 >
-                  <PlusCircle className="w-6 h-6 text-indigo-600" />
+                  <Wallet className="w-6 h-6 text-indigo-600" />
                   <span className="font-bold text-lg dark:text-white">CarteiraFácil</span>
                 </button>
                 <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)}>
