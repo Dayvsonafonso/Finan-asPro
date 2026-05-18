@@ -13,7 +13,4 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-self.addEventListener('fetch', (e) => {
-  // No-op fetch handler: satisfies PWA install criteria perfectly
-  // without causing any stale assets or 404 cache out-of-sync bugs!
-});
+

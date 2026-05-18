@@ -195,7 +195,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
         >
           <div className="h-[250px] lg:h-[300px] w-full">
             {expenseByCategory.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                 <PieChart>
                   <Pie
                     data={expenseByCategory}
@@ -234,7 +234,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
 
         <Card title="Entradas vs Saídas">
           <div className="h-[250px] lg:h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <BarChart data={barData}>
                 <XAxis 
                   dataKey="name" 
