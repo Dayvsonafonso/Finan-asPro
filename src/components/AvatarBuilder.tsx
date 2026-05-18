@@ -87,26 +87,26 @@ const FACIAL_HAIR = [
 ];
 
 const SKIN_COLORS = [
-  { id: 'pale', color: '#FFDBB4' },
-  { id: 'light', color: '#EDB98A' },
-  { id: 'yellow', color: '#F8D25C' },
-  { id: 'tanned', color: '#FD9841' },
-  { id: 'brown', color: '#D08B5B' },
-  { id: 'darkBrown', color: '#AE5D29' },
-  { id: 'black', color: '#614335' },
+  { id: 'FFDBB4', color: '#FFDBB4' },
+  { id: 'EDB98A', color: '#EDB98A' },
+  { id: 'F8D25C', color: '#F8D25C' },
+  { id: 'FD9841', color: '#FD9841' },
+  { id: 'D08B5B', color: '#D08B5B' },
+  { id: 'AE5D29', color: '#AE5D29' },
+  { id: '614335', color: '#614335' },
 ];
 
 const HAIR_COLORS = [
-  { id: 'black', color: '#262E33' },
-  { id: 'brownDark', color: '#4A3123' },
-  { id: 'brown', color: '#724133' },
-  { id: 'auburn', color: '#A55728' },
-  { id: 'blonde', color: '#B58143' },
-  { id: 'blondeGolden', color: '#E6D38B' },
-  { id: 'red', color: '#CA4420' },
-  { id: 'platinum', color: '#ECDCBF' },
-  { id: 'silverGray', color: '#E8E1E1' },
-  { id: 'pastelPink', color: '#F59797' },
+  { id: '262E33', color: '#262E33' },
+  { id: '4A3123', color: '#4A3123' },
+  { id: '724133', color: '#724133' },
+  { id: 'A55728', color: '#A55728' },
+  { id: 'B58143', color: '#B58143' },
+  { id: 'E6D38B', color: '#E6D38B' },
+  { id: 'CA4420', color: '#CA4420' },
+  { id: 'ECDCBF', color: '#ECDCBF' },
+  { id: 'E8E1E1', color: '#E8E1E1' },
+  { id: 'F59797', color: '#F59797' },
 ];
 
 type Tab = 'appearance' | 'face' | 'clothes' | 'accessories';
@@ -115,9 +115,9 @@ export function AvatarBuilder({ onSave, onCancel, isSaving }: AvatarBuilderProps
   const [activeTab, setActiveTab] = useState<Tab>('appearance');
   
   // Avatar state
-  const [skinColor, setSkinColor] = useState('light');
+  const [skinColor, setSkinColor] = useState('EDB98A');
   const [top, setTop] = useState('shortRound');
-  const [hairColor, setHairColor] = useState('brownDark');
+  const [hairColor, setHairColor] = useState('4A3123');
   const [eyes, setEyes] = useState('default');
   const [mouth, setMouth] = useState('smile');
   const [clothes, setClothes] = useState('hoodie');
