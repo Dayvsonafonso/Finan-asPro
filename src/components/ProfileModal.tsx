@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
 import { Button } from './ui/Button';
 import { Modal } from './ui/Modal';
+import { AvatarBuilder } from './AvatarBuilder';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -166,43 +167,27 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
 
   if (isAvatarSelectionMode) {
     return (
-      <Modal isOpen={isOpen} onClose={handleModalClose} title="Escolher Avatar">
-        <div className="space-y-6">
-          <button 
-            onClick={() => setIsAvatarSelectionMode(false)}
-            className="flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600 transition-colors"
-          >
-            <ChevronLeft className="w-4 h-4 mr-1" />
-            Voltar para o perfil
-          </button>
-          
-          <div className="grid grid-cols-4 sm:grid-cols-5 gap-4">
-            {AVATAR_SEEDS.map(seed => {
-              const url = `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`;
-              const isSelected = avatarUrl === url;
-              return (
-                <button
-                  key={seed}
-                  onClick={() => handleSelectPreset(seed)}
-                  disabled={isUploadingAvatar}
-                  className={`relative aspect-square rounded-full overflow-hidden border-2 transition-all ${
-                    isSelected 
-                      ? 'border-indigo-600 scale-110 shadow-md ring-2 ring-indigo-500/30' 
-                      : 'border-gray-200 dark:border-gray-700 hover:border-indigo-400 hover:scale-105 cursor-pointer opacity-70 hover:opacity-100'
-                  }`}
-                >
-                  <img src={url} alt={seed} className="w-full h-full object-cover" />
-                </button>
-              );
-            })}
-          </div>
-          
-          {isUploadingAvatar && (
-            <div className="flex justify-center mt-4">
-              <Loader2 className="w-6 h-6 text-indigo-600 animate-spin" />
-            </div>
-          )}
-        </div>
+      <Modal isOpen={isOpen} onClose={handleModalClose} title="Montador de Avatar">
+        <AvatarBuilder 
+          initialUrl={avatarUrl}
+          onSave={async (url) => {
+            setIsUploadingAvatar(true);
+            try {
+              const { error } = await supabase.auth.updateUser({
+                data: { avatar_url: url }
+              });
+              if (error) throw error;
+              toast.success('Avatar atualizado!');
+              setIsAvatarSelectionMode(false);
+            } catch (err: any) {
+              toast.error('Erro ao atualizar avatar: ' + (err?.message || 'Erro desconhecido'));
+            } finally {
+              setIsUploadingAvatar(false);
+            }
+          }}
+          onCancel={() => setIsAvatarSelectionMode(false)}
+          isSaving={isUploadingAvatar}
+        />
       </Modal>
     );
   }
