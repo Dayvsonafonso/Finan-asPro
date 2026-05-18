@@ -165,7 +165,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
               {formatCurrency(totals.balance - (currentMonthTotals.income - currentMonthTotals.expense))}
             </h2>
             <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm truncate">
-              Meses anteriores
+              Saldo Acumulado
             </div>
           </div>
         </Card>
