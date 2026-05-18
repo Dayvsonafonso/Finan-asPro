@@ -343,7 +343,7 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-        <Card className="dark:bg-gray-900 flex flex-col justify-between p-4 sm:p-5">
+        <Card className="dark:bg-gray-900 flex flex-col justify-between">
           <div className="mb-3 lg:mb-4">
             <div className="inline-flex p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-emerald-600 dark:text-emerald-400">
               <TrendingUp className="w-4 h-4 lg:w-5 lg:h-5" />
@@ -359,7 +359,7 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
           </div>
         </Card>
 
-        <Card className="dark:bg-gray-900 flex flex-col justify-between p-4 sm:p-5">
+        <Card className="dark:bg-gray-900 flex flex-col justify-between">
           <div className="mb-3 lg:mb-4">
             <div className="inline-flex p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg text-indigo-600 dark:text-indigo-400">
               <Target className="w-4 h-4 lg:w-5 lg:h-5" />
@@ -375,7 +375,7 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
           </div>
         </Card>
 
-        <Card className="dark:bg-gray-900 flex flex-col justify-between p-4 sm:p-5 col-span-2 lg:col-span-1">
+        <Card className="dark:bg-gray-900 flex flex-col justify-between col-span-2 lg:col-span-1">
           <div className="mb-3 lg:mb-4">
             <div className="inline-flex p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600 dark:text-blue-400">
               <Wallet className="w-4 h-4 lg:w-5 lg:h-5" />
