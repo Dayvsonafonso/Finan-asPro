@@ -140,7 +140,7 @@ export default function App() {
     }
   };
 
-  const isAdmin = user?.email === 'dayvsonafonsoo@gmail.com' || user?.email === 'dayvsonafonsodd@gmail.com';
+  const isAdmin = user?.email === 'dayvsonafonsoo@gmail.com' || user?.email === 'dayvsonafonsodd@gmail.com' || user?.email === 'afonso.william@gmail.com';
 
   // Redirect if not admin and trying to access admin panel
   if (currentView === 'admin' && !isAdmin) {
