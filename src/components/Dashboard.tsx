@@ -122,60 +122,68 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        <Card className="dark:bg-gray-900">
-          <div className="flex items-center space-x-2 mb-3 lg:mb-4">
-            <div className="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-emerald-600 dark:text-emerald-400">
+        <Card className="dark:bg-gray-900 flex flex-col justify-between">
+          <div className="mb-3 lg:mb-4">
+            <div className="inline-flex p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-emerald-600 dark:text-emerald-400">
               <TrendingUp className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
-            <span className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm truncate">
-              + Entradas do mês
-            </span>
           </div>
-          <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate">
-            {formatCurrency(currentMonthTotals.income)}
-          </h2>
+          <div>
+            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+              {formatCurrency(currentMonthTotals.income)}
+            </h2>
+            <div className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm truncate">
+              + Entradas do mês
+            </div>
+          </div>
         </Card>
 
-        <Card className="dark:bg-gray-900">
-          <div className="flex items-center space-x-2 mb-3 lg:mb-4">
-            <div className="p-2 bg-red-50 dark:bg-red-900/20 rounded-lg text-red-600 dark:text-red-400">
+        <Card className="dark:bg-gray-900 flex flex-col justify-between">
+          <div className="mb-3 lg:mb-4">
+            <div className="inline-flex p-2 bg-red-50 dark:bg-red-900/20 rounded-lg text-red-600 dark:text-red-400">
               <TrendingDown className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
-            <span className="text-red-600 dark:text-red-400 text-xs sm:text-sm truncate">
-              - Saídas do mês
-            </span>
           </div>
-          <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate">
-            {formatCurrency(currentMonthTotals.expense)}
-          </h2>
+          <div>
+            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+              {formatCurrency(currentMonthTotals.expense)}
+            </h2>
+            <div className="text-red-600 dark:text-red-400 text-xs sm:text-sm truncate">
+              - Saídas do mês
+            </div>
+          </div>
         </Card>
 
-        <Card className="dark:bg-gray-900">
-          <div className="flex items-center space-x-2 mb-3 lg:mb-4">
-            <div className="p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg text-indigo-600 dark:text-indigo-400">
+        <Card className="dark:bg-gray-900 flex flex-col justify-between">
+          <div className="mb-3 lg:mb-4">
+            <div className="inline-flex p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg text-indigo-600 dark:text-indigo-400">
               <History className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
-            <span className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm truncate">
-              Meses anteriores
-            </span>
           </div>
-          <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate">
-            {formatCurrency(totals.balance - (currentMonthTotals.income - currentMonthTotals.expense))}
-          </h2>
+          <div>
+            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+              {formatCurrency(totals.balance - (currentMonthTotals.income - currentMonthTotals.expense))}
+            </h2>
+            <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm truncate">
+              Meses anteriores
+            </div>
+          </div>
         </Card>
 
-        <Card className="dark:bg-gray-900">
-          <div className="flex items-center space-x-2 mb-3 lg:mb-4">
-            <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-orange-600 dark:text-orange-400">
+        <Card className="dark:bg-gray-900 flex flex-col justify-between">
+          <div className="mb-3 lg:mb-4">
+            <div className="inline-flex p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg text-orange-600 dark:text-orange-400">
               <Target className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
-            <span className="text-orange-600 dark:text-orange-400 text-xs sm:text-sm truncate">
-              A Pagar ({formatCurrency(usedBudget)})
-            </span>
           </div>
-          <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate">
-            {formatCurrency(totalBudget)}
-          </h2>
+          <div>
+            <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
+              {formatCurrency(totalBudget)}
+            </h2>
+            <div className="text-orange-600 dark:text-orange-400 text-xs sm:text-sm truncate">
+              A Pagar ({formatCurrency(usedBudget)})
+            </div>
+          </div>
         </Card>
       </div>
 
