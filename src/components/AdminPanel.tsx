@@ -191,11 +191,12 @@ export function AdminPanel() {
   const getTimeSince = (dateStr: string | null) => {
     if (!dateStr) return null;
     const diff = Date.now() - new Date(dateStr).getTime();
+    if (diff < 0) return 'Online agora'; // future dates (clock skew)
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
 
-    if (minutes < 1) return 'Online agora';
+    if (minutes < 2) return 'Online agora';
     if (minutes < 60) return `${minutes}min atrás`;
     if (hours < 24) return `${hours}h atrás`;
     if (days < 30) return `${days}d atrás`;
@@ -207,12 +208,12 @@ export function AdminPanel() {
     if (!lastUse) return { label: 'Nunca usou', color: 'text-gray-400', dot: 'bg-gray-300 dark:bg-gray-600' };
 
     const diff = Date.now() - new Date(lastUse).getTime();
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
+    const minutes = Math.floor(Math.max(0, diff) / 60000);
+    const hours = Math.floor(Math.max(0, diff) / 3600000);
+    const days = Math.floor(Math.max(0, diff) / 86400000);
 
-    if (minutes < 10) return { label: 'Online agora', color: 'text-green-500', dot: 'bg-green-500 animate-pulse' };
-    if (hours < 1) return { label: `${minutes}min atrás`, color: 'text-green-500', dot: 'bg-green-500' };
+    if (minutes < 2) return { label: 'Online agora', color: 'text-green-500', dot: 'bg-green-500 animate-pulse' };
+    if (minutes < 60) return { label: `${minutes}min atrás`, color: 'text-green-500', dot: 'bg-green-500' };
     if (hours < 24) return { label: `${hours}h atrás`, color: 'text-amber-500', dot: 'bg-amber-500' };
     if (days < 7) return { label: `${days}d atrás`, color: 'text-orange-500', dot: 'bg-orange-500' };
     if (days < 30) return { label: `${days}d atrás`, color: 'text-gray-500', dot: 'bg-gray-400' };
