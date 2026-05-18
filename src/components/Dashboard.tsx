@@ -114,7 +114,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
               <div className="p-3 bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/20 dark:shadow-indigo-950/40">
                 <Wallet className="w-6 h-6" />
               </div>
-              <h2 className="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white">{formatCurrency(totals.balance)}</h2>
+              <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate">{formatCurrency(totals.balance)}</h2>
             </div>
             <span className="text-xs font-black bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded-full whitespace-nowrap uppercase tracking-widest">Saldo Total</span>
           </div>
