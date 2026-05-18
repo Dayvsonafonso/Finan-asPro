@@ -349,9 +349,9 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-        <Card className="dark:bg-gray-900 flex flex-col justify-between">
+        <Card className="bg-emerald-50/30 dark:bg-emerald-950/20 border-emerald-100/50 dark:border-emerald-900/20 flex flex-col justify-between">
           <div className="mb-3 lg:mb-4">
-            <div className="inline-flex p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-emerald-600 dark:text-emerald-400">
+            <div className="inline-flex p-2 bg-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-500/20 dark:shadow-emerald-950/40">
               <TrendingUp className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
           </div>
@@ -359,15 +359,15 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
             <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
               {formatCurrency(totalIncome)}
             </h2>
-            <div className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm truncate">
+            <div className="text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm font-semibold truncate">
               Renda Mensal
             </div>
           </div>
         </Card>
 
-        <Card className="dark:bg-gray-900 flex flex-col justify-between">
+        <Card className="bg-indigo-50/30 dark:bg-indigo-950/20 border-indigo-100/50 dark:border-indigo-900/20 flex flex-col justify-between">
           <div className="mb-3 lg:mb-4">
-            <div className="inline-flex p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg text-indigo-600 dark:text-indigo-400">
+            <div className="inline-flex p-2 bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/20 dark:shadow-indigo-950/40">
               <Target className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
           </div>
@@ -375,15 +375,15 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
             <h2 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white truncate mb-1">
               {formatCurrency(totalBudgeted)}
             </h2>
-            <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm truncate">
+            <div className="text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm font-semibold truncate">
               Total Orçado
             </div>
           </div>
         </Card>
 
-        <Card className="dark:bg-gray-900 flex flex-col justify-between col-span-2 lg:col-span-1">
+        <Card className="bg-blue-50/30 dark:bg-blue-950/20 border-blue-100/50 dark:border-blue-900/20 flex flex-col justify-between col-span-2 lg:col-span-1">
           <div className="mb-3 lg:mb-4">
-            <div className="inline-flex p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600 dark:text-blue-400">
+            <div className="inline-flex p-2 bg-blue-500 text-white rounded-xl shadow-lg shadow-blue-500/20 dark:shadow-blue-950/40">
               <Wallet className="w-4 h-4 lg:w-5 lg:h-5" />
             </div>
           </div>
@@ -391,7 +391,7 @@ export function BudgetView({ categories, transactions, onUpdateCategory }: Budge
             <h2 className={`text-xl lg:text-2xl font-bold truncate mb-1 ${remainingToBudget < 0 ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>
               {formatCurrency(remainingToBudget)}
             </h2>
-            <div className="text-blue-600 dark:text-blue-400 text-xs sm:text-sm truncate">
+            <div className="text-blue-600 dark:text-blue-400 text-xs sm:text-sm font-semibold truncate">
               Disponível para Alocar
             </div>
           </div>

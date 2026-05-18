@@ -108,15 +108,15 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
     <div className="space-y-6 lg:space-y-8">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-4 lg:gap-6">
-        <Card className="bg-[#1E293B] text-white border-none py-2 lg:py-4">
+        <Card className="bg-indigo-50/30 dark:bg-indigo-950/20 border-indigo-100/50 dark:border-indigo-900/20 py-3 lg:py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="p-3 bg-white/10 rounded-xl">
+              <div className="p-3 bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/20 dark:shadow-indigo-950/40">
                 <Wallet className="w-6 h-6" />
               </div>
-              <h2 className="text-3xl lg:text-4xl font-bold">{formatCurrency(totals.balance)}</h2>
+              <h2 className="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white">{formatCurrency(totals.balance)}</h2>
             </div>
-            <span className="text-xs font-medium bg-white/10 px-3 py-1.5 rounded-full whitespace-nowrap">Saldo Total</span>
+            <span className="text-xs font-black bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded-full whitespace-nowrap uppercase tracking-widest">Saldo Total</span>
           </div>
         </Card>
       </div>
