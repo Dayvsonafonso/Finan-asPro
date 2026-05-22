@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
 import { supabase } from '../lib/supabase';
@@ -38,10 +38,11 @@ export function AdminPanel() {
   const [sortField, setSortField] = useState<SortField>('last_active_at');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [, setTick] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Force re-render every 30s to keep relative times updated in real-time
+  // Re-renderiza a cada 60s para manter os tempos relativos atualizados (sem chamar o banco)
   useEffect(() => {
-    const timer = setInterval(() => setTick(t => t + 1), 30000);
+    const timer = setInterval(() => setTick(t => t + 1), 60000);
     return () => clearInterval(timer);
   }, []);
 
@@ -91,12 +92,39 @@ export function AdminPanel() {
   useEffect(() => {
     fetchUsers();
 
-    // Atualiza silenciosamente a cada 15 segundos para dar a sensação de tempo real
-    const interval = setInterval(() => {
-      fetchUsers(true);
-    }, 15000);
+    // OTIMIZAÇÃO: Intervalo aumentado de 15s para 60s.
+    // Além disso, o polling é pausado quando a aba está em segundo plano,
+    // evitando chamadas desnecessárias ao banco enquanto o admin não está olhando.
+    const startPolling = () => {
+      if (intervalRef.current) return;
+      intervalRef.current = setInterval(() => {
+        fetchUsers(true);
+      }, 60000);
+    };
 
-    return () => clearInterval(interval);
+    const stopPolling = () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchUsers(true); // Atualiza imediatamente ao voltar
+        startPolling();
+      } else {
+        stopPolling();
+      }
+    };
+
+    startPolling();
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      stopPolling();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   const filteredUsers = useMemo(() => {

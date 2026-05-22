@@ -60,12 +60,19 @@ export default function App() {
   } = useFinance();
 
   const [currentView, setCurrentView] = useState<View>('dashboard');
+  // Ref para acessar currentView dentro de callbacks sem recriar o canal Realtime
+  const currentViewRef = React.useRef<View>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  // Mantém o ref sincronizado com o state sem disparar efeitos
+  React.useEffect(() => {
+    currentViewRef.current = currentView;
+  }, [currentView]);
 
   // Calcula notificações não lidas
   const fetchUnreadCount = React.useCallback(async () => {
@@ -101,7 +108,9 @@ export default function App() {
     }
   }, [user]);
 
-  // Efeito para monitorar novas notificações periódica e por eventos em tempo real
+  // Efeito para monitorar novas notificações por eventos em tempo real
+  // OTIMIZAÇÃO: currentView foi removido das dependências — usamos currentViewRef.current
+  // para evitar que o canal seja destruído e recriado a cada troca de aba.
   React.useEffect(() => {
     if (!user) return;
     fetchUnreadCount();
@@ -120,8 +129,8 @@ export default function App() {
           
           if (payload.eventType === 'INSERT') {
             const newNotif = payload.new;
-            // Se o usuário NÃO estiver visualizando a aba de notificações, exibe o pop-up (toast) em tempo real
-            if (currentView !== 'notifications') {
+            // Usa o ref para ler a view atual sem recriar o canal
+            if (currentViewRef.current !== 'notifications') {
               toast.info('Novo comunicado do administrador!', {
                 description: newNotif.title,
                 action: {
@@ -136,15 +145,12 @@ export default function App() {
       )
       .subscribe();
 
-    // Polling opcional a cada 30 segundos como fallback
-    const interval = setInterval(fetchUnreadCount, 30000);
-
     return () => {
       window.removeEventListener('notifications-updated', fetchUnreadCount);
       supabase.removeChannel(channel);
-      clearInterval(interval);
     };
-  }, [user, fetchUnreadCount, currentView]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, fetchUnreadCount]);
 
   // Zera o contador quando entra na aba de notificações
   React.useEffect(() => {
@@ -154,12 +160,9 @@ export default function App() {
     }
   }, [currentView]);
 
-  // Força uma atualização de atividade imediata sempre que o usuário trocar de aba
-  React.useEffect(() => {
-    if (user && updateActivity) {
-      updateActivity(true);
-    }
-  }, [currentView, user, updateActivity]);
+  // OTIMIZAÇÃO: Removida a chamada updateActivity(true) a cada troca de aba.
+  // O useActivityTracker já lida com throttle de 30s, eventos de foco e visibilidade.
+  // Forçar um upsert no banco em cada navegação era desnecessário e sobrecarregava o Supabase.
 
   if (authLoading) {
     return (
