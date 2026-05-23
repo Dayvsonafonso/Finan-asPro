@@ -113,7 +113,7 @@ export function TransactionList({ transactions, categories, onDelete, onEdit, on
 
   return (
     <div className="space-y-6 lg:space-y-8">
-      {/* Filtered Summary */}
+      {/* Resumo Filtrado */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card className="bg-emerald-50/50 dark:bg-emerald-900/10 border-emerald-100 dark:border-emerald-900/30 p-4 lg:p-5 relative overflow-hidden group">
           <div className="absolute -right-4 -top-4 w-24 h-24 bg-emerald-100/50 dark:bg-emerald-800/20 rounded-full blur-2xl group-hover:bg-emerald-200/50 transition-colors duration-500" />
@@ -155,7 +155,7 @@ export function TransactionList({ transactions, categories, onDelete, onEdit, on
         </Card>
       </div>
 
-      {/* Filters Bar */}
+      {/* Barra de Filtros */}
       <div className="bg-white dark:bg-gray-900 p-3 lg:p-4 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm space-y-4 transition-colors duration-300">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">
@@ -228,7 +228,7 @@ export function TransactionList({ transactions, categories, onDelete, onEdit, on
         </div>
       </div>
 
-      {/* Transactions List Grouped by Date */}
+      {/* Lista de Transações Agrupadas por Data */}
       <div className="space-y-6 lg:space-y-10">
         <AnimatePresence mode="popLayout">
           {groupedTransactions.length > 0 ? (
@@ -315,7 +315,7 @@ export function TransactionList({ transactions, categories, onDelete, onEdit, on
                                           : "bg-gradient-to-r from-indigo-500 to-purple-600 shadow-[0_0_15px_rgba(99,102,241,0.4)]"
                                       )}
                                     >
-                                      {/* Glossy effect */}
+                                      {/* Efeito de brilho */}
                                       <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent opacity-50" />
                                     </motion.div>
                                   </div>

@@ -23,7 +23,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
 
-  // Filter transactions for the current month
+  // Filtra transações do mês atual
   const currentMonthTransactions = transactions.filter(t => {
     const [year, month] = t.date.split('-').map(Number);
     return (month - 1) === currentMonth && year === currentYear;
@@ -67,7 +67,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
     return acc + Math.max(0, budget - spent);
   }, 0);
 
-  // Data for Pie Chart (Expenses by Category - Current Month)
+  // Dados para o Gráfico de Pizza (Despesas por Categoria - Mês Atual)
   const expenseByCategory = currentMonthTransactions
     .filter(t => t.type === 'expense')
     .reduce((acc: any[], t) => {
@@ -81,11 +81,11 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
       return acc;
     }, []);
 
-  // Data for Bar Chart (Income vs Expense)
-  // Group by month for the last 6 months
+  // Dados para o Gráfico de Barras (Receitas vs Despesas)
+  // Agrupa por mês para os últimos 6 meses
   const last6Months = Array.from({ length: 6 }, (_, i) => {
     const d = new Date();
-    d.setDate(1); // Set to 1st of the month to avoid rollover bugs (e.g., Feb 29th)
+    d.setDate(1); // Define para o dia 1 do mês para evitar bugs de rollover (ex: 29 de Fevereiro)
     d.setMonth(d.getMonth() - i);
     const label = d.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
     return {
@@ -127,7 +127,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
 
   return (
     <div className="space-y-6 lg:space-y-8">
-      {/* Summary Cards */}
+      {/* Cards de Resumo */}
       <div className="grid grid-cols-1 gap-4 lg:gap-6">
         <Card className="bg-indigo-50/30 dark:bg-indigo-950/20 border-indigo-100/50 dark:border-indigo-900/20 py-3 lg:py-5">
           <div className="flex items-center space-x-4">
@@ -210,7 +210,7 @@ export function Dashboard({ transactions, categories, totals }: DashboardProps) 
         </Card>
       </div>
 
-      {/* Charts Section */}
+      {/* Seção de Gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         <Card
           title="Saídas por Categoria"

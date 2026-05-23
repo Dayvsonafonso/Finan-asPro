@@ -7,7 +7,7 @@ export function InstallView() {
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
-      {/* Platform Selector Buttons */}
+      {/* Botões Seletores de Plataforma */}
       <div className="bg-white dark:bg-gray-900 p-2 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm flex gap-3 transition-colors duration-300">
         <button
           onClick={() => setPlatform('android')}
@@ -34,9 +34,9 @@ export function InstallView() {
         </button>
       </div>
 
-      {/* Main Guide Card */}
+      {/* Card Principal de Instruções */}
       <Card className="p-6 sm:p-8 relative overflow-hidden">
-        {/* Glow effect in background */}
+        {/* Efeito de brilho em segundo plano */}
         <div className="absolute -top-12 -right-12 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl" />
         
         <div className="flex items-center space-x-4 mb-8">
@@ -51,7 +51,7 @@ export function InstallView() {
 
         {platform === 'android' ? (
           <div className="space-y-8">
-            {/* Step 1 */}
+            {/* Passo 1 */}
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-sm mt-0.5">
                 01
@@ -64,7 +64,7 @@ export function InstallView() {
               </div>
             </div>
 
-            {/* Step 2 */}
+            {/* Passo 2 */}
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-sm mt-0.5">
                 02
@@ -77,7 +77,7 @@ export function InstallView() {
               </div>
             </div>
 
-            {/* Step 3 */}
+            {/* Passo 3 */}
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-sm mt-0.5">
                 03
@@ -90,7 +90,7 @@ export function InstallView() {
               </div>
             </div>
 
-            {/* Step 4 */}
+            {/* Passo 4 */}
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-sm mt-0.5">
                 04
@@ -105,7 +105,7 @@ export function InstallView() {
           </div>
         ) : (
           <div className="space-y-8">
-            {/* Step 1 */}
+            {/* Passo 1 */}
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-black text-sm mt-0.5">
                 01
@@ -118,7 +118,7 @@ export function InstallView() {
               </div>
             </div>
 
-            {/* Step 2 */}
+            {/* Passo 2 */}
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-black text-sm mt-0.5">
                 02
@@ -131,7 +131,7 @@ export function InstallView() {
               </div>
             </div>
 
-            {/* Step 3 */}
+            {/* Passo 3 */}
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-black text-sm mt-0.5">
                 03
@@ -144,7 +144,7 @@ export function InstallView() {
               </div>
             </div>
 
-            {/* Step 4 */}
+            {/* Passo 4 */}
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-black text-sm mt-0.5">
                 04
@@ -159,7 +159,7 @@ export function InstallView() {
           </div>
         )}
 
-        {/* Benefits Alert Section */}
+        {/* Seção de Alerta de Benefícios */}
         <div className="mt-10 pt-6 border-t border-gray-100 dark:border-gray-800/60 flex items-start space-x-3 bg-indigo-50/50 dark:bg-indigo-950/20 p-4 rounded-2xl">
           <Award className="w-6 h-6 text-indigo-600 dark:text-indigo-400 flex-shrink-0 mt-0.5" />
           <div>

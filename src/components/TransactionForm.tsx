@@ -64,7 +64,7 @@ export function TransactionForm({ onSubmit, initialData, categories, onCancel }:
       finalData.description = `${data.otherDescription} - ${data.description}`;
     }
     
-    // Only keep installment info if category is Faturas
+    // Mantém apenas as informações de parcelamento se a categoria for Faturas
     if (data.category !== 'Faturas') {
       delete finalData.totalInstallments;
       delete finalData.currentInstallment;

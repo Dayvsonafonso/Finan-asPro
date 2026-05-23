@@ -20,12 +20,12 @@ export function NotificationsView() {
   const [dismissedIds, setDismissedIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   
-  // Form fields for Admin
+  // Campos do formulário para Administrador
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
 
-  // Check if current user is admin
+  // Verifica se o usuário atual é administrador
   const isAdmin = user?.email === 'dayvsonafonsoo@gmail.com' || user?.email === 'dayvsonafonsodd@gmail.com' || user?.email === 'afonso.william@gmail.com';
 
   useEffect(() => {
@@ -182,7 +182,7 @@ export function NotificationsView() {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      {/* Admin Panel: Send Notification */}
+      {/* Painel Admin: Enviar Comunicado */}
       {isAdmin && (
         <Card className="p-6 relative overflow-hidden border border-indigo-100 dark:border-indigo-900/50">
           <div className="absolute -top-10 -right-10 w-36 h-36 bg-indigo-500/10 rounded-full blur-2xl" />
@@ -232,7 +232,7 @@ export function NotificationsView() {
         </Card>
       )}
 
-      {/* Notifications List */}
+      {/* Lista de Notificações */}
       <div className="space-y-4">
         <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center space-x-2 mb-2">
           <Bell className="w-5 h-5 text-indigo-500" />

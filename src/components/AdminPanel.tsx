@@ -49,11 +49,11 @@ export function AdminPanel() {
   const fetchUsers = async (silent = false) => {
     if (!silent) setLoading(true);
     try {
-      // 1. Fetch all auth users via secure RPC (SECURITY DEFINER function)
+      // 1. Busca todos os usuários de autenticação via RPC seguro (função SECURITY DEFINER)
       const { data: rpcUsers, error } = await supabase.rpc('get_all_users');
       if (error) throw error;
 
-      // 2. Fetch activity data
+      // 2. Busca dados de atividade
       const { data: activityData } = await supabase
         .from('user_activity')
         .select('user_id, last_active_at');
@@ -63,7 +63,7 @@ export function AdminPanel() {
         activityMap.set(a.user_id, a.last_active_at);
       });
 
-      // 3. Merge
+      // 3. Mescla os dados
       const mapped: AuthUser[] = (rpcUsers || []).map((u: any) => ({
         id: u.id,
         email: u.email || 'Sem email',
@@ -144,7 +144,7 @@ export function AdminPanel() {
       let valB: string = '';
 
       if (sortField === 'last_active_at') {
-        // For last_active_at, fallback to last_sign_in_at if no activity tracked
+        // Para last_active_at, usa last_sign_in_at como alternativa se não houver atividade registrada
         valA = a.last_active_at || a.last_sign_in_at || '';
         valB = b.last_active_at || b.last_sign_in_at || '';
       } else {
@@ -280,7 +280,7 @@ export function AdminPanel() {
 
   return (
     <div className="space-y-6">
-      {/* Stats Cards */}
+      {/* Cards de Estatísticas */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}>
           <Card className="p-5 lg:p-6 relative overflow-hidden">
@@ -340,10 +340,10 @@ export function AdminPanel() {
         </motion.div>
       </div>
 
-      {/* Users Table */}
+      {/* Tabela de Usuários */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
         <Card className="overflow-hidden">
-          {/* Table Header */}
+          {/* Cabeçalho da Tabela */}
           <div className="p-4 lg:p-6 border-b border-gray-100 dark:border-gray-800">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center space-x-3">
@@ -392,7 +392,7 @@ export function AdminPanel() {
             </div>
           ) : (
             <>
-              {/* Desktop Table */}
+              {/* Tabela para Desktop */}
               <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -517,7 +517,7 @@ export function AdminPanel() {
                 </table>
               </div>
 
-              {/* Mobile Cards */}
+              {/* Cards para Dispositivos Móveis */}
               <div className="lg:hidden divide-y divide-gray-100 dark:divide-gray-800">
                 {filteredUsers.map((user, index) => {
                   const activity = getActivityStatus(user);

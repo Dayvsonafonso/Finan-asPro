@@ -114,7 +114,7 @@ type Tab = 'appearance' | 'face' | 'clothes' | 'accessories';
 export function AvatarBuilder({ onSave, onCancel, isSaving }: AvatarBuilderProps) {
   const [activeTab, setActiveTab] = useState<Tab>('appearance');
   
-  // Avatar state
+  // Estado do avatar
   const [skinColor, setSkinColor] = useState('EDB98A');
   const [top, setTop] = useState('shortRound');
   const [hairColor, setHairColor] = useState('4A3123');
@@ -124,7 +124,7 @@ export function AvatarBuilder({ onSave, onCancel, isSaving }: AvatarBuilderProps
   const [accessories, setAccessories] = useState('');
   const [facialHair, setFacialHair] = useState('');
 
-  // Generate URL based on current state
+  // Gera URL com base no estado atual
   const generateUrl = () => {
     let url = `https://api.dicebear.com/7.x/avataaars/svg?seed=custom&backgroundColor=transparent`;
     url += `&skinColor=${skinColor}`;
@@ -152,14 +152,14 @@ export function AvatarBuilder({ onSave, onCancel, isSaving }: AvatarBuilderProps
 
   return (
     <div className="space-y-6">
-      {/* Preview */}
+      {/* Visualização */}
       <div className="flex justify-center">
         <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full bg-indigo-50 dark:bg-indigo-900/20 border-4 border-white dark:border-gray-800 shadow-xl overflow-hidden">
           <img src={previewUrl} alt="Preview" className="w-full h-full object-cover transition-all" />
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Abas */}
       <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-xl">
         <button
           onClick={() => setActiveTab('appearance')}
@@ -203,11 +203,11 @@ export function AvatarBuilder({ onSave, onCancel, isSaving }: AvatarBuilderProps
         </button>
       </div>
 
-      {/* Editor Content */}
+      {/* Conteúdo do editor */}
       <div className="h-[280px] overflow-y-auto scrollbar-thin pr-2 space-y-6">
         {activeTab === 'appearance' && (
           <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
-            {/* Skin */}
+            {/* Pele */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tom de Pele</label>
               <div className="flex flex-wrap gap-2">
@@ -225,7 +225,7 @@ export function AvatarBuilder({ onSave, onCancel, isSaving }: AvatarBuilderProps
               </div>
             </div>
 
-            {/* Hair Color */}
+            {/* Cor do Cabelo */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Cor do Cabelo</label>
               <div className="flex flex-wrap gap-2">
@@ -243,7 +243,7 @@ export function AvatarBuilder({ onSave, onCancel, isSaving }: AvatarBuilderProps
               </div>
             </div>
 
-            {/* Hair Style */}
+            {/* Estilo de Cabelo */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Cabelo / Cabeça</label>
               <div className="grid grid-cols-2 gap-2">
@@ -268,7 +268,7 @@ export function AvatarBuilder({ onSave, onCancel, isSaving }: AvatarBuilderProps
 
         {activeTab === 'face' && (
           <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
-            {/* Eyes */}
+            {/* Olhos */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Olhos</label>
               <div className="grid grid-cols-2 gap-2">
@@ -289,7 +289,7 @@ export function AvatarBuilder({ onSave, onCancel, isSaving }: AvatarBuilderProps
               </div>
             </div>
 
-            {/* Mouth */}
+            {/* Boca */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Boca</label>
               <div className="grid grid-cols-2 gap-2">
@@ -338,7 +338,7 @@ export function AvatarBuilder({ onSave, onCancel, isSaving }: AvatarBuilderProps
 
         {activeTab === 'accessories' && (
           <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
-            {/* Accessories */}
+            {/* Acessórios */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Óculos / Acessórios</label>
               <div className="grid grid-cols-2 gap-2">
@@ -359,7 +359,7 @@ export function AvatarBuilder({ onSave, onCancel, isSaving }: AvatarBuilderProps
               </div>
             </div>
 
-            {/* Facial Hair */}
+            {/* Barba e Bigode */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Barba / Bigode</label>
               <div className="grid grid-cols-2 gap-2">

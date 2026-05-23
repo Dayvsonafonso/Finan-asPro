@@ -230,7 +230,7 @@ export default function App() {
           });
           toast.success(`Parcela ${t.currentInstallment} paga! Avançou para ${nextInstallment}/${t.totalInstallments}`);
         } else {
-          // Last installment
+          // Última parcela
           await updateTransaction(t.id, { 
             isPaid: true 
           });
@@ -247,7 +247,7 @@ export default function App() {
 
   const isAdmin = user?.email === 'dayvsonafonsoo@gmail.com' || user?.email === 'dayvsonafonsodd@gmail.com' || user?.email === 'afonso.william@gmail.com';
 
-  // Redirect if not admin and trying to access admin panel
+  // Redireciona se não for administrador e tentar acessar o painel administrativo
   if (currentView === 'admin' && !isAdmin) {
     setCurrentView('dashboard');
   }

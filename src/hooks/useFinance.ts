@@ -25,14 +25,14 @@ export function useFinance() {
   const [state, setState] = useState<FinanceState>(localState);
   const [loading, setLoading] = useState(false);
 
-  // Sync state with localState when not logged in
+  // Sincroniza o estado com o localState quando não estiver logado
   useEffect(() => {
     if (!user) {
       setState(localState);
     }
   }, [user, localState]);
 
-  // Fetch from Supabase when logged in
+  // Busca os dados do Supabase quando estiver logado
   useEffect(() => {
     if (user) {
       fetchData();
@@ -58,10 +58,10 @@ export function useFinance() {
 
       let fetchedCategories = categories;
 
-      // Seed default categories if user has none
+      // Cria categorias padrão se o usuário não tiver nenhuma
       if (!categories || categories.length === 0) {
-        // Prevent concurrent double-inserts by adding a tiny delay or checking again? 
-        // Not needed if we just deduplicate below, but let's be safe.
+        // Evita inserções duplas simultâneas adicionando um pequeno atraso ou verificando novamente?
+        // Não é necessário se apenas removermos as duplicadas abaixo, mas por segurança.
         const categoriesToInsert = DEFAULT_CATEGORIES.map(({ id, ...rest }) => ({
           ...rest,
           user_id: user.id
@@ -79,7 +79,7 @@ export function useFinance() {
         }
       }
 
-      // Deduplicate categories by name (fixes the React Strict Mode double-insert issue)
+      // Remove duplicidade de categorias por nome (corrige o problema de inserção dupla no modo estrito do React)
       const uniqueCategories = [];
       const seenNames = new Set();
       if (fetchedCategories && fetchedCategories.length > 0) {
@@ -88,14 +88,14 @@ export function useFinance() {
             seenNames.add(cat.name);
             uniqueCategories.push(cat);
           } else {
-            // Delete duplicate from Supabase silently
+            // Exclui duplicadas do Supabase silenciosamente
             supabase.from('categories').delete().eq('id', cat.id).then();
           }
         }
         fetchedCategories = uniqueCategories;
       }
 
-      // Map snake_case from DB to camelCase for the app
+      // Mapeia snake_case do banco de dados para camelCase para o aplicativo
       const mappedTransactions = (transactions || []).map(t => ({
         ...t,
         amount: Number(t.amount),

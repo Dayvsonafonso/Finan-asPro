@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { User, Lock, Mail, Camera, Eye, EyeOff, Check, AlertCircle, Loader2, Image as ImageIcon, Sparkles, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
@@ -27,7 +27,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     'Duke', 'Sadie'
   ];
 
-  // Password change
+  // Alteração de senha
   const [showPasswordSection, setShowPasswordSection] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -43,7 +43,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
     const file = e.target.files?.[0];
     if (!file || !user) return;
 
-    // Validate file
+    // Valida o arquivo
     if (!file.type.startsWith('image/')) {
       toast.error('Por favor, selecione uma imagem.');
       return;
@@ -58,22 +58,22 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       const fileExt = file.name.split('.').pop();
       const filePath = `${user.id}/avatar.${fileExt}`;
 
-      // Upload to Supabase Storage
+      // Faz upload para o Storage do Supabase
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
+      // Obtém a URL pública
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath);
 
-      // Add cache buster to force refresh
+      // Adiciona cache buster para forçar a atualização
       const urlWithCacheBuster = `${publicUrl}?t=${Date.now()}`;
 
-      // Update user metadata
+      // Atualiza os metadados do usuário
       const { error: updateError } = await supabase.auth.updateUser({
         data: { avatar_url: urlWithCacheBuster }
       });
@@ -195,7 +195,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
   return (
     <Modal isOpen={isOpen} onClose={handleModalClose} title="Meu Perfil">
       <div className="space-y-6">
-        {/* Avatar & Info Header */}
+        {/* Cabeçalho de Avatar e Informações */}
         <div className="flex flex-col items-center text-center pb-6 border-b border-gray-100 dark:border-gray-800">
           <div className="relative mb-4">
             <input
@@ -218,11 +218,11 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   referrerPolicy="no-referrer"
                 />
               </div>
-              {/* Overlay on hover */}
+              {/* Camada de sobreposição ao passar o mouse (hover) */}
               <div className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
                 <Camera className="w-6 h-6 text-white" />
               </div>
-              {/* Upload spinner */}
+              {/* Indicador de carregamento de upload */}
               {isUploadingAvatar && (
                 <div className="absolute inset-0 rounded-full flex items-center justify-center bg-black/50">
                   <Loader2 className="w-7 h-7 text-white animate-spin" />
@@ -233,7 +233,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
               <Camera className="w-4 h-4 text-white" />
             </div>
 
-            {/* Avatar Options Menu */}
+            {/* Menu de opções de avatar */}
             <AnimatePresence>
               {showAvatarMenu && (
                 <>
@@ -292,7 +292,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
           )}
         </div>
 
-        {/* Name Field */}
+        {/* Campo de Nome */}
         <div className="space-y-2">
           <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
             <User className="w-4 h-4" />
@@ -320,7 +320,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
           </div>
         </div>
 
-        {/* Email Field (read-only) */}
+        {/* Campo de Email (apenas leitura) */}
         <div className="space-y-2">
           <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300">
             <Mail className="w-4 h-4" />
@@ -334,7 +334,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
           />
         </div>
 
-        {/* Password Section */}
+        {/* Seção de Senha */}
         {!isGoogleUser && (
           <div className="space-y-3 pt-2 border-t border-gray-100 dark:border-gray-800">
             <button
@@ -366,7 +366,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                   className="overflow-hidden"
                 >
                   <div className="space-y-3 px-1 pb-2">
-                    {/* New Password */}
+                    {/* Nova Senha */}
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                         Nova Senha
@@ -389,7 +389,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                       </div>
                     </div>
 
-                    {/* Confirm Password */}
+                    {/* Confirmar Senha */}
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                         Confirmar Senha
@@ -412,7 +412,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                       </div>
                     </div>
 
-                    {/* Password mismatch warning */}
+                    {/* Aviso de senhas que não coincidem */}
                     {confirmPassword && newPassword !== confirmPassword && (
                       <div className="flex items-center gap-2 text-xs text-red-500 px-1">
                         <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
@@ -441,7 +441,7 @@ export function ProfileModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
           </div>
         )}
 
-        {/* Google users info */}
+        {/* Informações para usuários da conta Google */}
         {isGoogleUser && (
           <div className="flex items-start gap-3 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20">
             <AlertCircle className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />

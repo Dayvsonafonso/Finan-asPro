@@ -160,7 +160,7 @@ export function GoalsView() {
 
   return (
     <div className="space-y-6">
-      {/* Summary Cards */}
+      {/* Cards de Resumo */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
         <Card className="bg-emerald-50/30 dark:bg-emerald-950/20 border-emerald-100/50 dark:border-emerald-900/20 flex flex-col justify-between py-4">
           <div className="mb-3">
@@ -211,7 +211,7 @@ export function GoalsView() {
         </Card>
       </div>
 
-      {/* Goals Grid */}
+      {/* Grade de Metas */}
       {goals.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {goals.map(goal => {
@@ -300,7 +300,7 @@ export function GoalsView() {
                   </div>
                 </div>
 
-                {/* Quick Add/Remove Buttons */}
+                {/* Botões de Adicionar/Remover Rápido */}
                 <div className="flex items-center space-x-2 mt-4 pt-3 border-t border-gray-100 dark:border-gray-800/60">
                   <Button 
                     className="flex-1 text-xs py-1.5 h-8 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold rounded-lg border-none"
@@ -339,7 +339,7 @@ export function GoalsView() {
         </Card>
       )}
 
-      {/* Form Dialog/Modal */}
+      {/* Diálogo/Modal de Formulário */}
       <AnimatePresence>
         {isOpenForm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -460,7 +460,7 @@ export function GoalsView() {
         )}
       </AnimatePresence>
 
-      {/* Fund Modals (Guardar / Resgatar Rápido) */}
+      {/* Modais de Fundos (Guardar / Resgatar Rápido) */}
       <AnimatePresence>
         {activeFundGoal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

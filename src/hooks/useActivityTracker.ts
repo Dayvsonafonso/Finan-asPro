@@ -3,9 +3,9 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
 /**
- * Tracks user activity by updating a `user_activity` table in Supabase.
- * Designed to work reliably on mobile browsers where setInterval
- * is throttled or paused when the tab/app is in the background.
+ * Rastreia a atividade do usuário atualizando a tabela `user_activity` no Supabase.
+ * Projetado para funcionar de forma confiável em navegadores móveis onde o setInterval
+ * é limitado ou pausado quando a aba/app está em segundo plano.
  */
 export function useActivityTracker() {
   const { user } = useAuth();
@@ -15,7 +15,7 @@ export function useActivityTracker() {
   const updateActivity = useCallback(async (force = false) => {
     if (!user) return;
 
-    // Throttle: don't update more than once every 30 seconds unless forced
+    // Limitação (Throttle): não atualiza mais do que uma vez a cada 30 segundos, a menos que seja forçado
     const now = Date.now();
     if (!force && now - lastUpdateRef.current < 30000) return;
     lastUpdateRef.current = now;
@@ -53,36 +53,36 @@ export function useActivityTracker() {
   useEffect(() => {
     if (!user) return;
 
-    // Update immediately on mount
+    // Atualiza imediatamente na montagem do componente
     updateActivity();
 
-    // Update every 45 seconds (reliable interval)
+    // Atualiza a cada 45 segundos (intervalo confiável)
     intervalRef.current = setInterval(updateActivity, 45 * 1000);
 
-    // When user returns to the tab/app (critical for mobile!)
+    // Quando o usuário retorna para a aba/app (crítico para dispositivos móveis!)
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        // Reset throttle so it updates immediately on return
+        // Reseta a limitação para atualizar imediatamente no retorno
         lastUpdateRef.current = 0;
         updateActivity();
       }
     };
 
-    // When window gets focus back
+    // Quando a janela recupera o foco
     const handleFocus = () => {
       lastUpdateRef.current = 0;
       updateActivity();
     };
 
-    // On any touch/click interaction (throttled by updateActivity itself)
+    // Em qualquer interação de toque/clique (limitado pela própria função updateActivity)
     const handleInteraction = () => {
       updateActivity();
     };
 
-    // Mobile: when page is about to be hidden, try one last update
+    // Dispositivos móveis: quando a página está prestes a ser ocultada, tenta uma última atualização
     const handlePageHide = async () => {
       if (!user) return;
-      // Use the authenticated session token for proper RLS enforcement
+      // Usa o token da sessão autenticada para a devida aplicação do RLS
       const { data: { session } } = await supabase.auth.getSession();
       const accessToken = session?.access_token;
       if (!accessToken) return;
@@ -102,7 +102,7 @@ export function useActivityTracker() {
         'Authorization': `Bearer ${accessToken}`,
         'Prefer': 'resolution=merge-duplicates',
       };
-      // sendBeacon doesn't support custom headers, so use fetch with keepalive
+      // sendBeacon não suporta cabeçalhos personalizados, então usa fetch com keepalive
       try {
         fetch(url, {
           method: 'POST',
@@ -111,7 +111,7 @@ export function useActivityTracker() {
           keepalive: true,
         }).catch(() => {});
       } catch {
-        // Silently fail - best effort
+        // Falha silenciosamente - melhor esforço
       }
     };
 
