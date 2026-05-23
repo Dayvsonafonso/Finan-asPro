@@ -15,9 +15,9 @@ export function useActivityTracker() {
   const updateActivity = useCallback(async (force = false) => {
     if (!user) return;
 
-    // Limitação (Throttle): não atualiza mais do que uma vez a cada 30 segundos, a menos que seja forçado
+    // Limitação (Throttle): não atualiza mais do que uma vez a cada 3 minutos, a menos que seja forçado
     const now = Date.now();
-    if (!force && now - lastUpdateRef.current < 30000) return;
+    if (!force && now - lastUpdateRef.current < 180000) return;
     lastUpdateRef.current = now;
 
     try {
@@ -56,8 +56,8 @@ export function useActivityTracker() {
     // Atualiza imediatamente na montagem do componente
     updateActivity();
 
-    // Atualiza a cada 45 segundos (intervalo confiável)
-    intervalRef.current = setInterval(updateActivity, 45 * 1000);
+    // Atualiza a cada 5 minutos (intervalo confiável)
+    intervalRef.current = setInterval(updateActivity, 5 * 60 * 1000);
 
     // Quando o usuário retorna para a aba/app (crítico para dispositivos móveis!)
     const handleVisibilityChange = () => {

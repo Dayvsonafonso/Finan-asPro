@@ -99,7 +99,7 @@ export function AdminPanel() {
       if (intervalRef.current) return;
       intervalRef.current = setInterval(() => {
         fetchUsers(true);
-      }, 60000);
+      }, 5 * 60 * 1000);
     };
 
     const stopPolling = () => {
