@@ -222,7 +222,13 @@ export default function App() {
   const handleTogglePaid = async (t: Transaction) => {
     try {
       if (t.totalInstallments && t.currentInstallment) {
-        if (t.currentInstallment < t.totalInstallments) {
+        if (t.isPaid) {
+          // Se já está totalmente paga, desmarca e volta a ser pendente
+          await updateTransaction(t.id, { 
+            isPaid: false 
+          });
+          toast.success('Fatura marcada como pendente');
+        } else if (t.currentInstallment < t.totalInstallments) {
           const nextInstallment = t.currentInstallment + 1;
           await updateTransaction(t.id, { 
             currentInstallment: nextInstallment,

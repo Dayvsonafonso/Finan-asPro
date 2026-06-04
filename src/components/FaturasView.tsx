@@ -36,6 +36,7 @@ export function FaturasView({ transactions, categories, onDelete, onEdit, onTogg
             onDelete={onDelete}
             onEdit={onEdit}
             onTogglePaid={onTogglePaid}
+            defaultHidePaid={true}
           />
         </div>
       </div>

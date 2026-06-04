@@ -32,19 +32,27 @@ interface TransactionListProps {
   onDelete: (id: string) => void;
   onEdit: (transaction: Transaction) => void;
   onTogglePaid?: (transaction: Transaction) => void;
+  defaultHidePaid?: boolean; // Define o valor inicial do filtro de ocultar pagos
 }
 
 type SortField = 'date' | 'amount' | 'description';
 type SortOrder = 'asc' | 'desc';
 
-export function TransactionList({ transactions, categories, onDelete, onEdit, onTogglePaid }: TransactionListProps) {
+export function TransactionList({ 
+  transactions, 
+  categories, 
+  onDelete, 
+  onEdit, 
+  onTogglePaid,
+  defaultHidePaid = false 
+}: TransactionListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'income' | 'expense'>('all');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
-  const [hidePaid, setHidePaid] = useState(false); // Estado para ocultar lançamentos pagos
+  const [hidePaid, setHidePaid] = useState(defaultHidePaid); // Estado para ocultar lançamentos pagos
 
   const filteredTransactions = useMemo(() => {
     return transactions
@@ -387,7 +395,7 @@ export function TransactionList({ transactions, categories, onDelete, onEdit, on
 
                           <div className="flex items-center justify-between sm:justify-end sm:space-x-6 w-full sm:w-auto mt-1 sm:mt-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-50 dark:border-gray-800">
                             <div className="flex items-center space-x-3">
-                              {onTogglePaid && t.category === 'Faturas' && !t.totalInstallments && (
+                              {onTogglePaid && t.category === 'Faturas' && (
                                 <Button 
                                   variant="ghost" 
                                   size="icon" 
