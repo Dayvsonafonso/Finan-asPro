@@ -14,7 +14,9 @@ import {
   Wallet,
   XCircle,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Transaction, Category } from '../types';
@@ -42,6 +44,7 @@ export function TransactionList({ transactions, categories, onDelete, onEdit, on
   const [endDate, setEndDate] = useState('');
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [hidePaid, setHidePaid] = useState(false); // Estado para ocultar lançamentos pagos
 
   const filteredTransactions = useMemo(() => {
     return transactions
@@ -53,8 +56,9 @@ export function TransactionList({ transactions, categories, onDelete, onEdit, on
         const transactionDate = new Date(t.date);
         const matchesStartDate = !startDate || transactionDate >= new Date(startDate);
         const matchesEndDate = !endDate || transactionDate <= new Date(endDate);
+        const matchesPaid = !hidePaid || !t.isPaid; // Filtra se hidePaid for verdadeiro
 
-        return matchesSearch && matchesType && matchesStartDate && matchesEndDate;
+        return matchesSearch && matchesType && matchesStartDate && matchesEndDate && matchesPaid;
       })
       .sort((a, b) => {
         let comparison = 0;
@@ -83,6 +87,7 @@ export function TransactionList({ transactions, categories, onDelete, onEdit, on
     setFilterType('all');
     setStartDate('');
     setEndDate('');
+    setHidePaid(false); // Reseta o filtro de ocultar pagos
   };
 
   const groupedTransactions = useMemo(() => {
@@ -218,8 +223,31 @@ export function TransactionList({ transactions, categories, onDelete, onEdit, on
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
           />
+
+          {/* Botão para alternar exibição de itens pagos */}
+          <button
+            onClick={() => setHidePaid(!hidePaid)}
+            className={cn(
+              "flex items-center space-x-2 px-4 py-2 rounded-2xl border transition-all text-xs font-bold uppercase tracking-widest cursor-pointer select-none",
+              hidePaid
+                ? "bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400 shadow-sm hover:bg-amber-500/20"
+                : "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+            )}
+          >
+            {hidePaid ? (
+              <>
+                <EyeOff className="w-3.5 h-3.5" />
+                <span>Ocultando Pagos</span>
+              </>
+            ) : (
+              <>
+                <Eye className="w-3.5 h-3.5" />
+                <span>Ocultar Pagos</span>
+              </>
+            )}
+          </button>
           
-          {(searchTerm || filterType !== 'all' || startDate || endDate) && (
+          {(searchTerm || filterType !== 'all' || startDate || endDate || hidePaid) && (
             <Button variant="ghost" size="sm" onClick={clearFilters} className="ml-auto text-red-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl">
               <XCircle className="w-4 h-4 mr-2" />
               Limpar Filtros
