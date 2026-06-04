@@ -79,7 +79,7 @@ export function TransactionList({
         }
         return sortOrder === 'asc' ? comparison : -comparison;
       });
-  }, [transactions, searchTerm, filterType, startDate, endDate, sortField, sortOrder]);
+  }, [transactions, searchTerm, filterType, startDate, endDate, sortField, sortOrder, hidePaid]);
 
   const filteredTotals = useMemo(() => {
     return filteredTransactions.reduce((acc, t) => {
